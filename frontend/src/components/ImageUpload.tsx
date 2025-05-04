@@ -140,7 +140,16 @@ const ImageUpload: React.FC = () => {
         </div>
       )}
 
-      <RegisterForm />
+      <RegisterForm onSuccess={async () => {
+        faceMatcherRef.current = await loadFaceMatcher();
+        setUnknownFaces([]);
+        setTimeout(() => {
+          if (imageRef.current) {
+            handleImageLoad();
+          }
+        }, 300);
+      }} />
+
     </div>
   );
 };

@@ -188,7 +188,11 @@ const WebcamFeed: React.FC = () => {
         </div>
       )}
 
-      <RegisterForm />
+      <RegisterForm onSuccess={async () => {
+        faceMatcherRef.current = await loadFaceMatcher();
+        setUnknownFaces([]);
+      }} />
+
     </div>
   );
 };

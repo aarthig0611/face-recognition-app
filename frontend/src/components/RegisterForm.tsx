@@ -1,9 +1,17 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
-import { setName, resetForm } from '../redux/userSlice';
+import {
+  setName,
+  resetForm,
+  setRegistrationComplete,
+} from '../redux/userSlice';
 
-const RegisterForm: React.FC = () => {
+interface RegisterFormProps {
+  onSuccess?: () => void;
+}
+
+const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
   const { name, showForm, unknownDescriptor, croppedFace } = useSelector(
     (state: RootState) => state.user
   );
@@ -22,8 +30,9 @@ const RegisterForm: React.FC = () => {
       }),
     });
 
-    alert(`Registered ${name}. Please refresh to include new user.`);
+    dispatch(setRegistrationComplete(true));
     dispatch(resetForm());
+    onSuccess?.();
   };
 
   if (!showForm) return null;
