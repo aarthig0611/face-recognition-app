@@ -1,0 +1,39 @@
+import * as faceapi from 'face-api.js';
+
+export const loadModels = async () => {
+  const MODEL_URL = 'http://localhost:5002/models';
+  await Promise.all([
+    faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+    faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+    faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
+    faceapi.nets.ageGenderNet.loadFromUri(MODEL_URL),
+    faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
+  ]);
+};
+
+export const loadFaceMatcher = async () => {
+  const res = await fetch('http://localhost:5002/descriptors');
+  const data = await res.json();
+
+  const labeled = data.map((person: any) => {
+    const descriptors = person.descriptors.map((d: number[]) => new Float32Array(d));
+    return new faceapi.LabeledFaceDescriptors(person.label, descriptors);
+  });
+
+  return new faceapi.FaceMatcher(labeled, 0.6);
+};
+
+export const getTopExpression = (expressions: faceapi.FaceExpressions): string => {
+  let topExpression = '';
+  let maxProbability = -Infinity;
+
+  for (const key in expressions) {
+    const value = expressions[key as keyof faceapi.FaceExpressions];
+    if (typeof value === 'number' && value > maxProbability) {
+      maxProbability = value;
+      topExpression = key;
+    }
+  }
+
+  return topExpression;
+};
