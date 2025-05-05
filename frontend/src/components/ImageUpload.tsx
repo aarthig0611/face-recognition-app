@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { setShowForm, setUnknownDescriptor, setCroppedFace } from '../redux/userSlice';
 import { loadModels, loadFaceMatcher, getTopExpression } from '../utils/faceUtils';
 import RegisterForm from './RegisterForm';
+import UnknownFaceCard from './UnknownFaceCard';
 import '../style/Overlay.css';
 
 interface FaceBox {
@@ -83,7 +84,7 @@ const ImageUpload: React.FC = () => {
       ctx!.strokeRect(x, y, width, height);
       ctx!.font = '14px Arial';
       ctx!.fillStyle = 'blue';
-      ctx!.fillText(bestMatch.toString(), x, y - 30);
+      ctx!.fillText(bestMatch.label, x, y - 30);
       ctx!.fillText(`${Math.round(result.age)} yrs | ${result.gender}`, x, y - 15);
       ctx!.fillText(`Emotion: ${getTopExpression(result.expressions)}`, x, y + height + 20);
   
@@ -129,13 +130,16 @@ const ImageUpload: React.FC = () => {
       {unknownFaces.length > 0 && (
         <div>
           <h4>Unknown Faces Detected</h4>
+          <p>Click on a image below to register.</p>
           <div>
-            {unknownFaces.map((face, idx) => (
-              <div key={idx}>
-                <img src={face.croppedImage} alt={`unknown-${idx}`} width={100} />
-                <button onClick={() => handleSelectFace(face.descriptor, face.croppedImage)}>Register</button>
-              </div>
-            ))}
+          {unknownFaces.map((face, idx) => (
+            <UnknownFaceCard
+              key={idx}
+              croppedImage={face.croppedImage}
+              descriptor={face.descriptor}
+              onClick={handleSelectFace}
+            />
+          ))}
           </div>
         </div>
       )}

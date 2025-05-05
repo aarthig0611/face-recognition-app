@@ -37,3 +37,6 @@ export const getTopExpression = (expressions: faceapi.FaceExpressions): string =
 
   return topExpression;
 };
+
+export const descriptorToHash = (descriptor: Float32Array) =>
+  Array.from(descriptor).map(d => d.toFixed(2)).join(',');

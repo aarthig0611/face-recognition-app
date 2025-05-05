@@ -39,7 +39,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
 
   return (
     <div className="register-form">
-      <h3>Unknown Person Detected</h3>
+      <h3>Do you want to register?</h3>
       {croppedFace && (
         <img src={croppedFace} alt="Selected face" width={100} className="mb-2" />
       )}
