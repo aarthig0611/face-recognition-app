@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import * as faceapi from 'face-api.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUnknownDescriptor, setShowForm, setCroppedFace } from '../redux/userSlice';
@@ -92,42 +92,62 @@ const WebcamFeed: React.FC = () => {
   const [showPopup, setShowPopup] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
 
-  const stopVideo = () => {
+  const processEmotionTimeline = () => {
+    const timelineData: any[] = [];
+    const users = Array.from(emotionLog.current.keys());
+    // If no user is selected, pick the first one by default
+    if (users.length > 0 && !selectedUser) {
+      setSelectedUser(users[0]);
+    }
+    // Convert emotion timestamps to timeline data
+    users.forEach(user => {
+      const userEmotions = emotionLog.current.get(user);
+      if (userEmotions) {
+        let totalDuration = 0;
+        Array.from(userEmotions.entries()).forEach(([emotion, duration]) => {
+          totalDuration += duration;
+          timelineData.push({
+            user,
+            emotion,
+            duration: duration / 1000, // convert to seconds
+            timestamp: new Date(totalDuration).toISOString().substr(11, 8)
+          });
+        });
+      }
+    });
+    setEmotionTimeline(timelineData);
+  };
+
+  const stopVideo = useCallback(() => {
     if (streamRef.current) {
       streamRef.current.getTracks().forEach(track => track.stop());
       streamRef.current = null;
     }
-
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
-
     setIsCameraOn(false);
     setIsVideoPaused(false);
     if (videoRef.current) {
       videoRef.current.srcObject = null;
     }
-
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d', { willReadFrequently: true });
     if (ctx && canvas) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
-
     setUnknownFaces([]);
     recentUnknownsMap.current.clear();
-
     // Process emotion data for the timeline graph
     processEmotionTimeline();
     setReportVisible(true);
-    
     // Only show popup if there's emotion data
     if (emotionLog.current.size > 0) {
       setShowPopup(true);
     }
-  };
-  
+  }, [processEmotionTimeline, setReportVisible, setShowPopup]);
+
   useEffect(() => {
     const init = async () => {
       await loadModels();
@@ -155,37 +175,6 @@ const WebcamFeed: React.FC = () => {
     } catch (err) {
       console.error('Camera access denied', err);
     }
-  };
-
-  
-
-  const processEmotionTimeline = () => {
-    const timelineData: any[] = [];
-    const users = Array.from(emotionLog.current.keys());
-    
-    // If no user is selected, pick the first one by default
-    if (users.length > 0 && !selectedUser) {
-      setSelectedUser(users[0]);
-    }
-
-    // Convert emotion timestamps to timeline data
-    users.forEach(user => {
-      const userEmotions = emotionLog.current.get(user);
-      if (userEmotions) {
-        let totalDuration = 0;
-        Array.from(userEmotions.entries()).forEach(([emotion, duration]) => {
-          totalDuration += duration;
-          timelineData.push({
-            user,
-            emotion,
-            duration: duration / 1000, // convert to seconds
-            timestamp: new Date(totalDuration).toISOString().substr(11, 8)
-          });
-        });
-      }
-    });
-
-    setEmotionTimeline(timelineData);
   };
 
   const getUserEmotionData = (): EmotionData[] => {
