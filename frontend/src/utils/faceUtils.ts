@@ -1,7 +1,7 @@
 import * as faceapi from 'face-api.js';
 
 export const loadModels = async () => {
-  const MODEL_URL = 'http://localhost:5002/models';
+  const MODEL_URL = 'facerec-h6anfaccc5fzgke2.westus-01.azurewebsites.net/models';
   await Promise.all([
     faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
     faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
@@ -12,7 +12,7 @@ export const loadModels = async () => {
 };
 
 export const loadFaceMatcher = async () => {
-  const res = await fetch('http://localhost:5002/descriptors');
+  const res = await fetch('facerec-h6anfaccc5fzgke2.westus-01.azurewebsites.net/descriptors');
   const data = await res.json();
 
   const labeled = data.map((person: any) => {
