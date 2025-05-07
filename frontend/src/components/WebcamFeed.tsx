@@ -7,6 +7,7 @@ import { loadModels, loadFaceMatcher, getTopExpression, descriptorToHash } from 
 import RegisterForm from './RegisterForm';
 import UnknownFaceCard from './UnknownFaceCard';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useTheme } from './ThemeContext';
 import '../style/Overlay.css';
 import '../style/WebcamFeed.css';
 
@@ -33,6 +34,7 @@ const WebcamFeed: React.FC = () => {
 
   const dispatch = useDispatch();
   const showForm = useSelector((state: RootState) => state.user.showForm);
+  const { theme } = useTheme();
 
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [emotionTimeline, setEmotionTimeline] = useState<any[]>([]);
@@ -224,7 +226,23 @@ const WebcamFeed: React.FC = () => {
             dispatch(setUnknownDescriptor(detection.descriptor));
             dispatch(setCroppedFace(croppedImage));
 
-            setUnknownFaces(prev => [...prev.slice(-9), newFace]);
+            setUnknownFaces(prev => {
+              // Check if we already have a face with this hash
+              const hash = descriptorToHash(detection.descriptor);
+              const existingFaceIndex = prev.findIndex(face => 
+                descriptorToHash(face.descriptor) === hash
+              );
+              
+              if (existingFaceIndex === -1) {
+                // If no existing face, add the new one
+                return [...prev, newFace];
+              } else {
+                // If face exists, replace it with the new one
+                const updatedFaces = [...prev];
+                updatedFaces[existingFaceIndex] = newFace;
+                return updatedFaces;
+              }
+            });
           }
         } else {
           const user = bestMatch.label;
@@ -302,85 +320,66 @@ const WebcamFeed: React.FC = () => {
       </div>
 
       {reportVisible && emotionLog.current.size > 0 && (
-    <div className="emotion-report">
-      <h3 className="emotion-report-title">Emotion Timeline Report</h3>
-      
-      <div className="user-selector">
-        <label>Select User: </label>
-        <select 
-          value={selectedUser || ''}
-          onChange={(e) => setSelectedUser(e.target.value)}
-        >
-          {Array.from(emotionLog.current.keys()).map(user => (
-            <option key={user} value={user}>{user}</option>
-          ))}
-        </select>
-      </div>
-      
-      {selectedUser && (
-        <div className="emotion-timeline">
-          <h4>Emotion Timeline for {selectedUser}</h4>
-          <div style={{ width: '100%', height: 400 }}>
-            <ResponsiveContainer>
-              <LineChart
-                data={getUserEmotionData()}
-                margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis 
-                  dataKey="time" 
-                  label={{ value: 'Time (seconds)', position: 'bottom' }} 
-                />
-                <YAxis 
-                  label={{ value: 'Duration (seconds)', angle: -90, position: 'left' }} 
-                />
-                <Tooltip 
-                  formatter={(value, name, props) => [
-                    `${value}s`, 
-                    `Emotion: ${props.payload.emotion}`,
-                    `Time: ${props.payload.time}s`
-                  ]}
-                />
-                <Legend />
-                <Line 
-                  type="monotone" 
-                  dataKey="duration" 
-                  name="Emotion Duration" 
-                  stroke="#8884d8" 
-                  activeDot={{ r: 8 }} 
-                />
-              </LineChart>
-            </ResponsiveContainer>
+        <div className="emotion-report">
+          <h3 className="emotion-report-title">Emotion Timeline Report</h3>
+          
+          <div className="user-selector">
+            <label>Select User: </label>
+            <select 
+              value={selectedUser || ''}
+              onChange={(e) => setSelectedUser(e.target.value)}
+            >
+              {Array.from(emotionLog.current.keys()).map(user => (
+                <option key={user} value={user}>{user}</option>
+              ))}
+            </select>
           </div>
+          
+          {selectedUser && (
+            <div className="emotion-timeline">
+              <h4>Emotion Timeline for {selectedUser}</h4>
+              <div style={{ width: '100%', height: 400 }}>
+                <ResponsiveContainer>
+                  <LineChart
+                    data={getUserEmotionData()}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#3c4043' : '#ddd'} />
+                    <XAxis 
+                      dataKey="time" 
+                      label={{ value: 'Time (seconds)', position: 'bottom' }} 
+                      stroke={theme === 'dark' ? '#e8eaed' : '#202124'}
+                    />
+                    <YAxis 
+                      label={{ value: 'Duration (seconds)', angle: -90, position: 'left' }} 
+                      stroke={theme === 'dark' ? '#e8eaed' : '#202124'}
+                    />
+                    <Tooltip 
+                      contentStyle={{
+                        backgroundColor: theme === 'dark' ? '#1e1e1e' : '#fff',
+                        borderColor: theme === 'dark' ? '#3c4043' : '#ddd'
+                      }}
+                      formatter={(value, name, props) => [
+                        `${value}s`, 
+                        `Emotion: ${props.payload.emotion}`,
+                        `Time: ${props.payload.time}s`
+                      ]}
+                    />
+                    <Legend />
+                    <Line 
+                      type="monotone" 
+                      dataKey="duration" 
+                      name="Emotion Duration" 
+                      stroke="#8884d8" 
+                      activeDot={{ r: 8 }} 
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          )}
         </div>
       )}
-      
-      <div className="emotion-summary">
-        <h4>Emotion Summary</h4>
-        <table>
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Emotion</th>
-              <th>Duration (s)</th>
-              <th>Timestamp</th>
-            </tr>
-          </thead>
-          <tbody>
-            {emotionTimeline.map((item, index) => (
-              <tr key={index}>
-                <td>{item.user}</td>
-                <td>{item.emotion}</td>
-                <td>{item.duration.toFixed(1)}</td>
-                <td>{item.timestamp}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  )}
-
 
       {showForm && (
         <RegisterForm

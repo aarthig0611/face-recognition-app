@@ -1,10 +1,12 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTheme } from './ThemeContext';
 import '../style/Footer.css';
 
 const Footer: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { theme } = useTheme();
 
   const handleScrollTo = (id: string) => {
     if (location.pathname !== '/') {
@@ -20,15 +22,15 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="footer">
+    <footer className={`footer ${theme}`}>
       <div className="footer-container">
         <section id="contact">
-            <div className="footer-section">
+          <div className="footer-section">
             <h3>Contact Information</h3>
-            <p> Aarthi Ganesan</p>
+            <p>Aarthi Ganesan</p>
             <p>Email: aarthig0611@gmail.com</p>
             <p>GitHub: <a href="https://github.com/aarthig0611/face-recognition-app" target="_blank" rel="noopener noreferrer">Face Recognition App</a></p>
-            </div>
+          </div>
         </section>
 
         <div className="footer-section">
@@ -40,7 +42,6 @@ const Footer: React.FC = () => {
             <li><button onClick={() => handleScrollTo('use-cases')}>Use Cases</button></li>
           </ul>
         </div>
-
       </div>
 
       <div className="footer-bottom">
