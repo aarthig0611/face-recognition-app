@@ -33,6 +33,29 @@ jobs:
           npm install --save-dev @typescript-eslint/eslint-plugin
           npx eslint --fix "src/**/*.ts" "src/**/*.tsx" || true
 
+      - name: Create webpack config override
+        working-directory: ./frontend
+        run: |
+          echo "module.exports = function override(config, env) {
+            config.resolve.fallback = {
+              ...config.resolve.fallback,
+              fs: false,
+              path: false,
+              os: false
+            };
+            return config;
+          }" > config-overrides.js
+
+      - name: Install react-app-rewired
+        working-directory: ./frontend
+        run: npm install --save-dev react-app-rewired
+
+      - name: Update package.json scripts
+        working-directory: ./frontend
+        run: |
+          npm pkg set scripts.build="react-app-rewired build"
+          npm pkg set scripts.start="react-app-rewired start"
+
       - name: Build frontend
         working-directory: ./frontend
         env:
@@ -40,9 +63,7 @@ jobs:
           NODE_OPTIONS: --max_old_space_size=4096
           SKIP_PREFLIGHT_CHECK: true
           GENERATE_SOURCEMAP: false
-        run: |
-          echo "// @ts-ignore" > node_modules/face-api.js/build/es6/env/index.d.ts
-          npm run build
+        run: npm run build
 
       - name: Install backend dependencies
         working-directory: ./backend
