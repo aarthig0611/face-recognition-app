@@ -6,7 +6,7 @@
   min-height: calc(100vh - 200px);
   display: flex;
   flex-direction: column;
-
+  color: var(--text-color);
 }
 
 .image-and-faces-container {
@@ -24,9 +24,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f0f0f0;
-  border-radius: 8px;
+  background-color: var(--bg-color);
+  border-radius: var(--border-radius);
   overflow: hidden;
+  border: 1px solid var(--border-color);
 }
 
 .unknown-faces-section {
@@ -36,28 +37,28 @@
   max-height: calc(100vh - 200px);
   overflow-y: auto;
   padding: 15px;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius);
+  background-color: var(--card-bg);
+  box-shadow: var(--box-shadow);
+  border: 1px solid var(--border-color);
 }
 
-/* scrollbar styling */
 .unknown-faces-section::-webkit-scrollbar {
   width: 8px;
 }
 
 .unknown-faces-section::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--bg-color);
   border-radius: 4px;
 }
 
 .unknown-faces-section::-webkit-scrollbar-thumb {
-  background: #888;
+  background: var(--gray-color);
   border-radius: 4px;
 }
 
 .unknown-faces-section::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: var(--primary-color);
 }
 
 .upload-section {
@@ -70,35 +71,36 @@
 }
 
 .upload-button {
-  background-color: #4CAF50;
+  background-color: var(--primary-color);
   color: white;
   border: none;
   padding: 12px 24px;
   font-size: 16px;
-  border-radius: 4px;
+  border-radius: var(--border-radius);
   cursor: pointer;
-  transition: background-color 0.3s;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: var(--transition);
+  box-shadow: var(--box-shadow);
 }
 
-.upload-button:hover {
-  background-color: #45a049;
+.upload-button:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
 }
 
 .upload-button:disabled {
-  background-color: #cccccc;
+  background-color: var(--gray-color);
   cursor: not-allowed;
 }
 
 .section-title {
   font-size: 24px;
-  color: #333;
+  color: var(--text-color);
   margin-bottom: 10px;
   text-align: center;
 }
 
 .section-subtitle {
-  color: #666;
+  color: var(--gray-color);
   margin-bottom: 15px;
   text-align: center;
 }

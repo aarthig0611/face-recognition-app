@@ -1,5 +1,4 @@
 /node_modules
-/models
-/labeled_images
+
 
 .DS_Store
