@@ -8,7 +8,7 @@ import multer from 'multer';
 
 const upload = multer();
 const app = express();
-const PORT = 5002;
+const PORT = 5000;
 
 const { Canvas, Image, ImageData } = canvas as any;
 faceapi.env.monkeyPatch({
@@ -110,6 +110,10 @@ const loadLabeledImages = async (): Promise<faceapi.LabeledFaceDescriptors[]> =>
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+app.use("/", (req, res) => {
+  res.send("Server is running");
+});
 
 app.get('/descriptors', async (req: Request, res: Response): Promise<void> => {
   try {
