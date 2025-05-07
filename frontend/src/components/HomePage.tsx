@@ -76,27 +76,33 @@ const HomePage: React.FC = () => {
   const useCases = [
     {
       title: "Movie & Media Reviews",
-      description: "Capture live emotional reactions during movie trailers, short films, or ad previews to better understand audience sentiment."
+      description: "Capture live emotional reactions during movie trailers, short films, or ad previews to better understand audience sentiment.",
+      image: "1.png"
     },
     {
       title: "Game Development & Testing",
-      description: "Gauge player engagement and emotional feedback throughout gameplay for refining user experience and game mechanics."
+      description: "Gauge player engagement and emotional feedback throughout gameplay for refining user experience and game mechanics.",
+      image: "2.png"
     },
     {
       title: "UI/UX & Product Research",
-      description: "Measure how users emotionally respond to new designs or features to make data-driven improvements in usability and design."
+      description: "Measure how users emotionally respond to new designs or features to make data-driven improvements in usability and design.",
+      image: "1.png"
     },
     {
       title: "Online Learning & Classrooms",
-      description: "Track student attention, confusion, or excitement levels during online sessions to adapt teaching methods accordingly."
+      description: "Track student attention, confusion, or excitement levels during online sessions to adapt teaching methods accordingly.",
+      image: "2.png"
     },
     {
       title: "Mental Health & Wellness",
-      description: "Monitor facial expressions over time to detect emotional patterns that could support therapy or self-awareness tools."
+      description: "Monitor facial expressions over time to detect emotional patterns that could support therapy or self-awareness tools.",
+      image: "1.png"
     },
     {
       title: "Retail & Customer Feedback",
-      description: "Evaluate customer reactions during product demos, feedback sessions, or surveys to enhance service and product satisfaction."
+      description: "Evaluate customer reactions during product demos, feedback sessions, or surveys to enhance service and product satisfaction.",
+      image: "2.png"
     }
   ];
 
@@ -242,6 +248,9 @@ const HomePage: React.FC = () => {
                 variants={slideUp}
                 whileHover={{ y: -5 }}
                 transition={{ duration: 0.3 }}
+                style={{
+                  '--bg-image': `url(${require(`../assets/${useCase.image}`)})`
+                } as React.CSSProperties}
               >
                 <h4>{useCase.title}</h4>
                 <p>{useCase.description}</p>
