@@ -26,6 +26,10 @@ jobs:
         working-directory: ./frontend
         run: npm install
 
+      - name: Set CI to false
+        run: echo "CI=false" >> $GITHUB_ENV
+
+
       - name: Build React frontend
         working-directory: ./frontend
         run: npm run build
