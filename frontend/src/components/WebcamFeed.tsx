@@ -86,7 +86,6 @@ const WebcamFeed: React.FC = () => {
   const { theme } = useTheme();
 
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
-  const [emotionTimeline, setEmotionTimeline] = useState<any[]>([]);
   const [colorScheme, setColorScheme] = useState<ColorSchemeType>('vibrant');
 
   const [showPopup, setShowPopup] = useState(false);
@@ -115,8 +114,7 @@ const WebcamFeed: React.FC = () => {
         });
       }
     });
-    setEmotionTimeline(timelineData);
-  }, [selectedUser, setSelectedUser, setEmotionTimeline]);
+  }, [selectedUser, setSelectedUser]);
 
   const stopVideo = useCallback(() => {
     if (streamRef.current) {

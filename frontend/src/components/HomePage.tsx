@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import '../style/HomePage.css';
 
 const HomePage: React.FC = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
   const { theme } = useTheme();
   const [loaded, setLoaded] = useState(false);
 
