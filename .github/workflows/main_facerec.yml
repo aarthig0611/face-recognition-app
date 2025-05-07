@@ -40,9 +40,17 @@ jobs:
       - name: Copy frontend build to backend
         run: cp -r ./frontend/build ./backend/dist/build
 
-      # Zip backend for deployment (include dist, package.json, package-lock.json)
+      # Prepare deployment folder with correct structure
+      - name: Prepare deployment folder
+        run: |
+          mkdir deploy
+          cp -r backend/dist deploy/dist
+          cp backend/package.json deploy/
+          if [ -f backend/package-lock.json ]; then cp backend/package-lock.json deploy/; fi
+
+      # Zip deployment folder for deployment
       - name: Zip artifact for deployment
-        run: cd backend && zip -r ../release.zip dist package.json package-lock.json
+        run: cd deploy && zip -r ../release.zip .
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -82,5 +90,5 @@ jobs:
         with:
           app-name: 'FaceRec'
           slot-name: 'Production'
-          package: ./dist
+          package: .
           
