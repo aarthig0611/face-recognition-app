@@ -30,7 +30,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onClose }) => {
     }
 
     try {
-      const response = await fetch('facerec-h6anfaccc5fzgke2.westus-01.azurewebsites.net/register', {
+      const response = await fetch('http://localhost:5002/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({

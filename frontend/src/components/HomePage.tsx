@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../components/ThemeContext';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import '../style/HomePage.css';
 
 const HomePage: React.FC = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
   const { theme } = useTheme();
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     setLoaded(true);
   }, []);
+
+  const toggleMenu = () => setMenuOpen(!menuOpen);
 
   const fadeIn = {
     hidden: { opacity: 0 },
