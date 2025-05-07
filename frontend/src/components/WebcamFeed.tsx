@@ -92,35 +92,6 @@ const WebcamFeed: React.FC = () => {
   const [showPopup, setShowPopup] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const init = async () => {
-      await loadModels();
-      faceMatcherRef.current = await loadFaceMatcher();
-    };
-    init();
-    return () => stopVideo();
-  }, []);
-
-  const startVideo = async () => {
-    if (isCameraOn) return;
-
-    emotionLog.current.clear();
-    emotionTimestamps.current.clear();
-    setReportVisible(false);
-    setIsVideoPaused(false);
-
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-      streamRef.current = stream;
-      setIsCameraOn(true);
-    } catch (err) {
-      console.error('Camera access denied', err);
-    }
-  };
-
   const stopVideo = () => {
     if (streamRef.current) {
       streamRef.current.getTracks().forEach(track => track.stop());
@@ -156,6 +127,37 @@ const WebcamFeed: React.FC = () => {
       setShowPopup(true);
     }
   };
+  
+  useEffect(() => {
+    const init = async () => {
+      await loadModels();
+      faceMatcherRef.current = await loadFaceMatcher();
+    };
+    init();
+    stopVideo();
+  }, [stopVideo]);
+
+  const startVideo = async () => {
+    if (isCameraOn) return;
+
+    emotionLog.current.clear();
+    emotionTimestamps.current.clear();
+    setReportVisible(false);
+    setIsVideoPaused(false);
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+      streamRef.current = stream;
+      setIsCameraOn(true);
+    } catch (err) {
+      console.error('Camera access denied', err);
+    }
+  };
+
+  
 
   const processEmotionTimeline = () => {
     const timelineData: any[] = [];
