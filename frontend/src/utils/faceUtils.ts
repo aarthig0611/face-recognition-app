@@ -38,5 +38,19 @@ export const getTopExpression = (expressions: faceapi.FaceExpressions): string =
   return topExpression;
 };
 
-export const descriptorToHash = (descriptor: Float32Array) =>
-  Array.from(descriptor).map(d => d.toFixed(2)).join(',');
+export const descriptorToHash = (descriptor: Float32Array) => {
+  // Normalize the descriptor values to reduce the impact of lighting and angle variations
+  const normalized = Array.from(descriptor).map(d => {
+    // Round to 3 decimal places for better precision
+    return Math.round(d * 1000) / 1000;
+  });
+  
+  // Calculate the mean of the descriptor values
+  const mean = normalized.reduce((sum, val) => sum + val, 0) / normalized.length;
+  
+  // Normalize values relative to the mean
+  const normalizedValues = normalized.map(val => val - mean);
+  
+  // Convert to string with 3 decimal places
+  return normalizedValues.map(d => d.toFixed(3)).join(',');
+};

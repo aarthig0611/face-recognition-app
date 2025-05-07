@@ -1,7 +1,6 @@
 .homepage-container {
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 100px 20px 0;
+    margin: 60px auto;
     color: var(--text-color);
     opacity: 0;
     transition: opacity 0.5s ease;
@@ -15,8 +14,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 3rem;
+    gap: 8rem;
     min-height: 80vh;
+    background-color: brown;
   }
   
   .hero-text h1 {
@@ -129,6 +129,21 @@
   .btn-secondary:hover {
     background-color: rgba(var(--primary-color), 0.1);
   }
+
+  .how-it-works-container {
+    background-color: antiquewhite;
+    width: 100%;
+  }
+
+  .how-its-made-container {
+    background-color: aqua;
+    width: 100%;
+  }
+
+  .how-its-used-container {
+    background-color: blueviolet;
+    width: 100%;
+  }
   
   .info-section {
     padding: 4rem 0;
@@ -156,7 +171,8 @@
   .info-cards {
     display: flex;
     gap: 2rem;
-    margin-top: 2rem;
+    /* margin-top: 2rem; */
+    padding: 20px 20px 0;
   }
   
   .info-card {
@@ -174,11 +190,19 @@
     color: var(--primary-color);
   }
   
+  .info-card ol {
+    list-style: none;
+    counter-reset: none;
+    padding-left: 0;
+  }
+  
   .info-card ol li {
     margin-bottom: 0.5rem;
     color: var(--text-color);
     position: relative;
     padding-left: 1.5rem;
+    text-align: left;
+    list-style-position: outside;
   }
   
   .info-card ol li::before {
@@ -193,6 +217,7 @@
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
     margin-top: 2rem;
+    padding: 20px 20px 0;
   }
   
   .use-card {
@@ -241,8 +266,8 @@
   .tech-icon {
     background-color: var(--bg-color);
     border-radius: 50%;
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -251,8 +276,8 @@
   }
   
   .tech-icon img {
-    width: 80px;
-    height: 80px;
+    width: 120px;
+    height: 120px;
     transition: var(--transition);
   }
   

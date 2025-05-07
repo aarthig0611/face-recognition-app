@@ -62,94 +62,30 @@
 }
 
 .theme-toggle-container {
-  position: relative;
   display: flex;
   align-items: center;
-  margin-left: 10px;
+  margin-left: 1rem;
 }
 
-#theme-toggle {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.theme-toggle-label {
-  width: 50px;
-  height: 30px;
-  background-color: var(--border-color);
-  display: flex;
-  border-radius: 50px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 6px;
-  position: relative;
+.theme-toggle-button {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
   cursor: pointer;
-  transition: var(--transition);
-}
-
-.theme-toggle-ball {
-  position: absolute;
-  width: 24px;
-  height: 24px;
-  background-color: var(--primary-color);
-  border-radius: 50%;
-  top: 3px;
-  left: 3px;
-  transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1),
-              background-color 0.3s ease;
-  z-index: 2;
-}
-
-#theme-toggle:checked + .theme-toggle-label .theme-toggle-ball {
-  transform: translateX(30px);
-}
-
-.sun, .moon {
-  width: 16px;
-  height: 16px;
-  z-index: 1;
+  font-size: 0.9rem;
+  font-weight: 500;
   transition: all 0.3s ease;
 }
 
-.sun path, .moon path {
-  fill: var(--text-color);
-  transition: fill 0.3s ease;
+.theme-toggle-button:hover {
+  background-color: var(--hover-color);
+  transform: translateY(-1px);
 }
 
-.sun {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.moon {
-  opacity: 0;
-  transform: scale(0.6);
-}
-
-#theme-toggle:checked + .theme-toggle-label .sun {
-  opacity: 0;
-  transform: scale(0.6);
-}
-
-#theme-toggle:checked + .theme-toggle-label .moon {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.theme-toggle-label:hover .theme-toggle-ball {
-  transform: scale(1.1);
-}
-
-#theme-toggle:checked + .theme-toggle-label:hover .theme-toggle-ball {
-  transform: translateX(30px) scale(1.1);
-}
-
-
-/* Update the existing theme-toggle styles to not conflict */
-.theme-toggle {
-  display: none;
+.theme-toggle-button:active {
+  transform: translateY(0);
 }
 
 .hamburger {
@@ -225,10 +161,9 @@
     margin-left: 0;
   }
   
-  .theme-toggle-label {
+  .theme-toggle-button {
     margin: 0 auto;
   }
-
 }
 
 @media (max-width: 480px) {
