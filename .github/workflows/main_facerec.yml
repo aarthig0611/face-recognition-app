@@ -47,8 +47,7 @@ jobs:
         run: cp -r ./frontend/build ./backend/dist/build
 
       - name: Zip artifact for deployment
-        working-directory: ./backend/dist
-        run: zip -r ../../release.zip .
+        run: zip -r release.zip ./backend/dist ./backend/package.json ./backend/package-lock.json
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
