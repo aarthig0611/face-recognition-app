@@ -13,8 +13,6 @@ const HomePage: React.FC = () => {
     setLoaded(true);
   }, []);
 
-  const toggleMenu = () => setMenuOpen(!menuOpen);
-
   const fadeIn = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.8 } }

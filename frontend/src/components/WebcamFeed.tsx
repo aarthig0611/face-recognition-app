@@ -92,7 +92,7 @@ const WebcamFeed: React.FC = () => {
   const [showPopup, setShowPopup] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
 
-  const processEmotionTimeline = () => {
+  const processEmotionTimeline = useCallback(() => {
     const timelineData: any[] = [];
     const users = Array.from(emotionLog.current.keys());
     // If no user is selected, pick the first one by default
@@ -116,7 +116,7 @@ const WebcamFeed: React.FC = () => {
       }
     });
     setEmotionTimeline(timelineData);
-  };
+  }, [selectedUser, setSelectedUser, setEmotionTimeline]);
 
   const stopVideo = useCallback(() => {
     if (streamRef.current) {
