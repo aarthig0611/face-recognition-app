@@ -1,11 +1,14 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as faceapi from 'face-api.js';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setUnknownDescriptor, setShowForm, setCroppedFace } from '../redux/userSlice';
+import { RootState } from '../redux/store';
 import { loadModels, loadFaceMatcher, getTopExpression, descriptorToHash } from '../utils/faceUtils';
 import RegisterForm from './RegisterForm';
 import UnknownFaceCard from './UnknownFaceCard';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import '../style/Overlay.css';
+import '../style/WebcamFeed.css';
 
 interface FaceBox {
   descriptor: Float32Array;
@@ -26,8 +29,13 @@ const WebcamFeed: React.FC = () => {
   const [isCameraOn, setIsCameraOn] = useState(false);
   const [unknownFaces, setUnknownFaces] = useState<FaceBox[]>([]);
   const [reportVisible, setReportVisible] = useState(false);
+  const [isVideoPaused, setIsVideoPaused] = useState(false);
 
   const dispatch = useDispatch();
+  const showForm = useSelector((state: RootState) => state.user.showForm);
+
+  const [selectedUser, setSelectedUser] = useState<string | null>(null);
+  const [emotionTimeline, setEmotionTimeline] = useState<any[]>([]);
 
   useEffect(() => {
     const init = async () => {
@@ -35,7 +43,6 @@ const WebcamFeed: React.FC = () => {
       faceMatcherRef.current = await loadFaceMatcher();
     };
     init();
-
     return () => stopVideo();
   }, []);
 
@@ -45,6 +52,7 @@ const WebcamFeed: React.FC = () => {
     emotionLog.current.clear();
     emotionTimestamps.current.clear();
     setReportVisible(false);
+    setIsVideoPaused(false);
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
@@ -70,6 +78,7 @@ const WebcamFeed: React.FC = () => {
     }
 
     setIsCameraOn(false);
+    setIsVideoPaused(false);
     if (videoRef.current) {
       videoRef.current.srcObject = null;
     }
@@ -83,7 +92,59 @@ const WebcamFeed: React.FC = () => {
     setUnknownFaces([]);
     recentUnknownsMap.current.clear();
 
+    // Process emotion data for the timeline graph
+    processEmotionTimeline();
     setReportVisible(true);
+  };
+
+  const processEmotionTimeline = () => {
+    const timelineData: any[] = [];
+    const users = Array.from(emotionLog.current.keys());
+    
+    // If no user is selected, pick the first one by default
+    if (users.length > 0 && !selectedUser) {
+      setSelectedUser(users[0]);
+    }
+
+    // Convert emotion timestamps to timeline data
+    users.forEach(user => {
+      const userEmotions = emotionLog.current.get(user);
+      if (userEmotions) {
+        let totalDuration = 0;
+        Array.from(userEmotions.entries()).forEach(([emotion, duration]) => {
+          totalDuration += duration;
+          timelineData.push({
+            user,
+            emotion,
+            duration: duration / 1000, // convert to seconds
+            timestamp: new Date(totalDuration).toISOString().substr(11, 8)
+          });
+        });
+      }
+    });
+
+    setEmotionTimeline(timelineData);
+  };
+
+  const getUserEmotionData = () => {
+    if (!selectedUser) return [];
+    
+    const data: any[] = [];
+    let cumulativeTime = 0;
+    const userEmotions = emotionLog.current.get(selectedUser);
+    
+    if (userEmotions) {
+      Array.from(userEmotions.entries()).forEach(([emotion, duration]) => {
+        cumulativeTime += duration;
+        data.push({
+          time: (cumulativeTime / 1000).toFixed(1),
+          emotion,
+          duration: duration / 1000
+        });
+      });
+    }
+    
+    return data;
   };
 
   const cropFace = (video: HTMLVideoElement, box: faceapi.Box): string => {
@@ -100,7 +161,7 @@ const WebcamFeed: React.FC = () => {
   };
 
   const handleVideoPlay = async () => {
-    if (intervalRef.current) return;
+    if (intervalRef.current || isVideoPaused) return;
 
     const video = videoRef.current;
     const canvas = canvasRef.current;
@@ -110,6 +171,8 @@ const WebcamFeed: React.FC = () => {
     faceapi.matchDimensions(canvas, displaySize);
 
     intervalRef.current = setInterval(async () => {
+      if (isVideoPaused) return;
+
       const detections = await faceapi
         .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 160 }))
         .withFaceLandmarks()
@@ -160,9 +223,8 @@ const WebcamFeed: React.FC = () => {
 
             dispatch(setUnknownDescriptor(detection.descriptor));
             dispatch(setCroppedFace(croppedImage));
-            dispatch(setShowForm(true));
 
-            setUnknownFaces(prev => [...prev.slice(-10), newFace]);
+            setUnknownFaces(prev => [...prev.slice(-9), newFace]);
           }
         } else {
           const user = bestMatch.label;
@@ -179,68 +241,157 @@ const WebcamFeed: React.FC = () => {
   };
 
   const handleSelectFace = (descriptor: Float32Array, croppedImage: string) => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+      setIsVideoPaused(true);
+    }
     dispatch(setUnknownDescriptor(descriptor));
     dispatch(setCroppedFace(croppedImage));
     dispatch(setShowForm(true));
   };
 
+  const handleResumeVideo = () => {
+    if (videoRef.current && isVideoPaused) {
+      videoRef.current.play();
+      setIsVideoPaused(false);
+    }
+  };
+
   return (
-    <div>
-      <div className="video-container">
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          onPlay={handleVideoPlay}
-          className="video-feed"
-        />
-        <canvas ref={canvasRef} className="overlay-canvas" />
+    <div className="webcam-container">
+      <div className="main-content">
+        <div className="video-container">
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            onPlay={handleVideoPlay}
+            className="video-feed"
+            style={{ opacity: isVideoPaused ? 0.5 : 1 }}
+          />
+          <canvas ref={canvasRef} className="overlay-canvas" />
+        </div>
+
+        {unknownFaces.length > 0 && (
+          <div className="unknown-faces-section">
+            <h4 className="unknown-faces-title">We spotted some new faces!</h4>
+            <p className="unknown-faces-subtitle">Tap a photo to help us get to know them</p>
+            <div className="unknown-faces-scroll-container">
+              <div className="unknown-faces-grid">
+                {unknownFaces.map((face, idx) => (
+                  <UnknownFaceCard
+                    key={idx}
+                    descriptor={face.descriptor}
+                    croppedImage={face.croppedImage}
+                    onClick={handleSelectFace}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      <div style={{ marginTop: '10px' }}>
-        <button onClick={startVideo} disabled={isCameraOn}>Start Camera</button>
-        <button onClick={stopVideo} disabled={!isCameraOn}>Stop Camera</button>
+      <div className="button-container">
+        <button className="control-button start-button" onClick={startVideo} disabled={isCameraOn}>
+          Start Camera
+        </button>
+        <button className="control-button stop-button" onClick={stopVideo} disabled={!isCameraOn}>
+          Stop Camera
+        </button>
       </div>
 
-      {unknownFaces.length > 0 && (
-        <div>
-          <h4>Unknown Faces Detected</h4>
-          <p>Click on a image below to register.</p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-            {unknownFaces.map((face, idx) => (
-              <UnknownFaceCard
-                key={idx}
-                descriptor={face.descriptor}
-                croppedImage={face.croppedImage}
-                onClick={handleSelectFace}
-              />
-            ))}
+      {reportVisible && emotionLog.current.size > 0 && (
+    <div className="emotion-report">
+      <h3 className="emotion-report-title">Emotion Timeline Report</h3>
+      
+      <div className="user-selector">
+        <label>Select User: </label>
+        <select 
+          value={selectedUser || ''}
+          onChange={(e) => setSelectedUser(e.target.value)}
+        >
+          {Array.from(emotionLog.current.keys()).map(user => (
+            <option key={user} value={user}>{user}</option>
+          ))}
+        </select>
+      </div>
+      
+      {selectedUser && (
+        <div className="emotion-timeline">
+          <h4>Emotion Timeline for {selectedUser}</h4>
+          <div style={{ width: '100%', height: 400 }}>
+            <ResponsiveContainer>
+              <LineChart
+                data={getUserEmotionData()}
+                margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="time" 
+                  label={{ value: 'Time (seconds)', position: 'bottom' }} 
+                />
+                <YAxis 
+                  label={{ value: 'Duration (seconds)', angle: -90, position: 'left' }} 
+                />
+                <Tooltip 
+                  formatter={(value, name, props) => [
+                    `${value}s`, 
+                    `Emotion: ${props.payload.emotion}`,
+                    `Time: ${props.payload.time}s`
+                  ]}
+                />
+                <Legend />
+                <Line 
+                  type="monotone" 
+                  dataKey="duration" 
+                  name="Emotion Duration" 
+                  stroke="#8884d8" 
+                  activeDot={{ r: 8 }} 
+                />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
       )}
+      
+      <div className="emotion-summary">
+        <h4>Emotion Summary</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Emotion</th>
+              <th>Duration (s)</th>
+              <th>Timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            {emotionTimeline.map((item, index) => (
+              <tr key={index}>
+                <td>{item.user}</td>
+                <td>{item.emotion}</td>
+                <td>{item.duration.toFixed(1)}</td>
+                <td>{item.timestamp}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )}
 
-      {reportVisible && emotionLog.current.size > 0 && (
-        <div style={{ marginTop: '20px' }}>
-          <h3>Emotion Report</h3>
-          {Array.from(emotionLog.current.entries()).map(([user, emotions]) => (
-            <div key={user}>
-              <h4>{user}</h4>
-              <ul>
-                {Array.from(emotions.entries()).map(([emotion, time]) => (
-                  <li key={emotion}>
-                    {emotion}: {(time / 1000).toFixed(1)} seconds
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
+
+      {showForm && (
+        <RegisterForm
+          onSuccess={async () => {
+            faceMatcherRef.current = await loadFaceMatcher();
+            setUnknownFaces([]);
+            handleResumeVideo();
+          }}
+          onClose={handleResumeVideo}
+        />
       )}
-
-      <RegisterForm onSuccess={async () => {
-        faceMatcherRef.current = await loadFaceMatcher();
-        setUnknownFaces([]);
-      }} />
     </div>
   );
 };
