@@ -3,7 +3,6 @@ import * as faceapi from 'face-api.js';
 import { useDispatch } from 'react-redux';
 import { setShowForm, setUnknownDescriptor, setCroppedFace } from '../redux/userSlice';
 import { loadModels, loadFaceMatcher, getTopExpression } from '../utils/faceUtils';
-import { useTheme } from './ThemeContext';
 import RegisterForm from './RegisterForm';
 import UnknownFaceCard from './UnknownFaceCard';
 import '../style/Overlay.css';
@@ -29,7 +28,6 @@ const ImageUpload: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   
   const dispatch = useDispatch();
-  const { theme } = useTheme();
 
   useEffect(() => {
     const init = async () => {
@@ -115,7 +113,7 @@ const ImageUpload: React.FC = () => {
           ctx.strokeRect(x, y, width, height);
           
           ctx.font = '14px Arial';
-          ctx.fillStyle = theme === 'dark' ? '#8ab4f8' : 'lime';
+          ctx.fillStyle = 'lime';
           ctx.fillText(bestMatch.label, x, y - 30);
           ctx.fillText(`${Math.round(result.age)} yrs | ${result.gender}`, x, y - 15);
           ctx.fillText(`Emotion: ${getTopExpression(result.expressions)}`, x, y + height + 20);

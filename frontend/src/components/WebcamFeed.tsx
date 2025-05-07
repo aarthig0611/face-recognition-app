@@ -6,64 +6,14 @@ import { RootState } from '../redux/store';
 import { loadModels, loadFaceMatcher, getTopExpression, descriptorToHash } from '../utils/faceUtils';
 import RegisterForm from './RegisterForm';
 import UnknownFaceCard from './UnknownFaceCard';
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip as RechartsTooltip,
-  Legend,
-  ResponsiveContainer
-} from 'recharts';
-import { useTheme } from './ThemeContext';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import '../style/Overlay.css';
 import '../style/WebcamFeed.css';
-import { motion } from 'framer-motion';
 
 interface FaceBox {
   descriptor: Float32Array;
   croppedImage: string;
 }
-
-interface EmotionData {
-  name: string;
-  value: number;
-  duration: number;
-  rank: number;
-}
-
-// Define the color scheme type
-type ColorSchemeType = 'vibrant' | 'pastel' | 'professional';
-
-// Define the color schemes with proper typing
-const colorSchemes: Record<ColorSchemeType, string[]> = {
-  vibrant: [
-    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD', 
-    '#D4A5A5', '#9B59B6', '#3498DB', '#E67E22', '#2ECC71'
-  ],
-  pastel: [
-    '#FFB3BA', '#BAFFC9', '#BAE1FF', '#FFFFBA', '#FFB3FF',
-    '#B3FFB3', '#B3FFFF', '#FFB3FF', '#FFD9B3', '#D9B3FF'
-  ],
-  professional: [
-    '#2C3E50', '#E74C3C', '#3498DB', '#2ECC71', '#F1C40F',
-    '#1ABC9C', '#E67E22', '#34495E', '#9B59B6', '#16A085'
-  ]
-};
-
-const CustomTooltip: React.FC<{ active?: boolean; payload?: Array<{ payload: EmotionData }>; theme: string }> = ({ active, payload, theme }) => {
-  if (active && payload && payload.length) {
-    const data = payload[0].payload;
-    return (
-      <div className="custom-tooltip">
-        <p className="tooltip-title">{data.name}</p>
-        <p className="tooltip-text">Percentage: {data.value.toFixed(1)}%</p>
-        <p className="tooltip-text">Duration: {data.duration.toFixed(1)}s</p>
-        <p className="tooltip-text">Rank: #{data.rank}</p>
-      </div>
-    );
-  }
-  return null;
-};
 
 const WebcamFeed: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -83,14 +33,9 @@ const WebcamFeed: React.FC = () => {
 
   const dispatch = useDispatch();
   const showForm = useSelector((state: RootState) => state.user.showForm);
-  const { theme } = useTheme();
 
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [emotionTimeline, setEmotionTimeline] = useState<any[]>([]);
-  const [colorScheme, setColorScheme] = useState<ColorSchemeType>('vibrant');
-
-  const [showPopup, setShowPopup] = useState(false);
-  const reportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const init = async () => {
@@ -150,11 +95,6 @@ const WebcamFeed: React.FC = () => {
     // Process emotion data for the timeline graph
     processEmotionTimeline();
     setReportVisible(true);
-    
-    // Only show popup if there's emotion data
-    if (emotionLog.current.size > 0) {
-      setShowPopup(true);
-    }
   };
 
   const processEmotionTimeline = () => {
@@ -186,27 +126,24 @@ const WebcamFeed: React.FC = () => {
     setEmotionTimeline(timelineData);
   };
 
-  const getUserEmotionData = (): EmotionData[] => {
+  const getUserEmotionData = () => {
     if (!selectedUser) return [];
     
+    const data: any[] = [];
+    let cumulativeTime = 0;
     const userEmotions = emotionLog.current.get(selectedUser);
-    if (!userEmotions) return [];
-
-    const totalDuration = Array.from(userEmotions.values()).reduce((sum, duration) => sum + duration, 0);
     
-    const data = Array.from(userEmotions.entries())
-      .map(([emotion, duration]) => ({
-        name: emotion,
-        value: (duration / totalDuration) * 100,
-        duration: duration / 1000,
-        rawDuration: duration
-      }))
-      .sort((a, b) => b.value - a.value)
-      .map((item, index) => ({
-        ...item,
-        rank: index + 1
-      }));
-
+    if (userEmotions) {
+      Array.from(userEmotions.entries()).forEach(([emotion, duration]) => {
+        cumulativeTime += duration;
+        data.push({
+          time: (cumulativeTime / 1000).toFixed(1),
+          emotion,
+          duration: duration / 1000
+        });
+      });
+    }
+    
     return data;
   };
 
@@ -320,11 +257,6 @@ const WebcamFeed: React.FC = () => {
     }
   };
 
-  const scrollToReport = () => {
-    reportRef.current?.scrollIntoView({ behavior: 'smooth' });
-    setShowPopup(false);
-  };
-
   return (
     <div className="webcam-container">
       <div className="main-content">
@@ -334,7 +266,8 @@ const WebcamFeed: React.FC = () => {
             autoPlay
             muted
             onPlay={handleVideoPlay}
-            className={`video-feed ${isVideoPaused ? 'paused' : ''}`}
+            className="video-feed"
+            style={{ opacity: isVideoPaused ? 0.5 : 1 }}
           />
           <canvas ref={canvasRef} className="overlay-canvas" />
         </div>
@@ -368,154 +301,86 @@ const WebcamFeed: React.FC = () => {
         </button>
       </div>
 
-      {showPopup && reportVisible && emotionLog.current.size > 0 && (
-        <div className="popup-overlay">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ 
-              type: "spring",
-              stiffness: 260,
-              damping: 20 
-            }}
-            className="analysis-popup"
-          >
-            <button
-              onClick={() => setShowPopup(false)}
-              className="popup-close-button"
-            >
-              ×
-            </button>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              <h3 className="popup-title">
-                Thanks for choosing FaceRec! 🎉
-              </h3>
-              
-              <div className="popup-content">
-                <p className="popup-description">
-                  We've completed a detailed analysis of the emotions detected during your session.
-                </p>
-                <ul className="feature-list">
-                  <li className="feature-item">✓ Real-time emotion tracking</li>
-                  <li className="feature-item">✓ Detailed emotion distribution</li>
-                  <li className="feature-item">✓ Duration analysis</li>
-                  <li className="feature-item">✓ Interactive visualization</li>
-                </ul>
-              </div>
-
-              <button
-                onClick={scrollToReport}
-                className="view-report-button"
-              >
-                View Detailed Report
-              </button>
-            </motion.div>
-          </motion.div>
-        </div>
-      )}
-
       {reportVisible && emotionLog.current.size > 0 && (
-        <div className="emotion-report" ref={reportRef}>
-          <h3 className="emotion-report-title">Emotion Timeline Report</h3>
-          
-          <div className="user-selector">
-            <label>Select User: </label>
-            <select 
-              value={selectedUser || ''}
-              onChange={(e) => setSelectedUser(e.target.value)}
-            >
-              {Array.from(emotionLog.current.keys()).map(user => (
-                <option key={user} value={user}>{user}</option>
-              ))}
-            </select>
-          </div>
-          
-          {selectedUser && (
-            <div className="emotion-timeline">
-              <h4>Emotion Distribution for {selectedUser}</h4>
-              
-              <div className="color-scheme-selector">
-                <label>Color Scheme: </label>
-                <select 
-                  value={colorScheme}
-                  onChange={(e) => setColorScheme(e.target.value as ColorSchemeType)}
-                >
-                  <option value="vibrant">Vibrant</option>
-                  <option value="pastel">Pastel</option>
-                  <option value="professional">Professional</option>
-                </select>
-              </div>
-
-              <motion.div 
-                className="chart-container"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
+    <div className="emotion-report">
+      <h3 className="emotion-report-title">Emotion Timeline Report</h3>
+      
+      <div className="user-selector">
+        <label>Select User: </label>
+        <select 
+          value={selectedUser || ''}
+          onChange={(e) => setSelectedUser(e.target.value)}
+        >
+          {Array.from(emotionLog.current.keys()).map(user => (
+            <option key={user} value={user}>{user}</option>
+          ))}
+        </select>
+      </div>
+      
+      {selectedUser && (
+        <div className="emotion-timeline">
+          <h4>Emotion Timeline for {selectedUser}</h4>
+          <div style={{ width: '100%', height: 400 }}>
+            <ResponsiveContainer>
+              <LineChart
+                data={getUserEmotionData()}
+                margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
               >
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
-                    <Pie
-                      data={getUserEmotionData()}
-                      dataKey="value"
-                      nameKey="name"
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={window.innerWidth <= 768 ? 100 : 150}
-                      innerRadius={window.innerWidth <= 768 ? 40 : 60}
-                      label={({ name, value }: { name: string; value: number }) => 
-                        window.innerWidth <= 768 ? `${name}` : `${name}: ${value.toFixed(1)}%`
-                      }
-                      animationBegin={0}
-                      animationDuration={1000}
-                      animationEasing="ease-out"
-                    >
-                      {getUserEmotionData().map((entry, index) => (
-                        <Cell 
-                          key={`cell-${index}`} 
-                          fill={colorSchemes[colorScheme][index % colorSchemes[colorScheme].length]}
-                          stroke={theme === 'dark' ? '#1e1e1e' : '#fff'}
-                          strokeWidth={2}
-                        />
-                      ))}
-                    </Pie>
-                    <RechartsTooltip content={<CustomTooltip theme={theme} />} />
-                    <Legend 
-                      layout={window.innerWidth <= 768 ? "horizontal" : "vertical"}
-                      align={window.innerWidth <= 768 ? "center" : "right"}
-                      verticalAlign={window.innerWidth <= 768 ? "bottom" : "middle"}
-                      formatter={(value: string, entry: any, index: number) => (
-                        <span className="legend-text">
-                          {value} ({getUserEmotionData()[index].value.toFixed(1)}%)
-                        </span>
-                      )}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </motion.div>
-
-              <div className="emotion-statistics">
-                <h5>Emotion Statistics</h5>
-                <div className="emotion-statistics-grid">
-                  {getUserEmotionData().map(emotion => (
-                    <div key={emotion.name} className="emotion-stat-item">
-                      <strong>{emotion.name}</strong>
-                      <p>Rank: #{emotion.rank}</p>
-                      <p>Duration: {emotion.duration.toFixed(1)}s</p>
-                      <p>Percentage: {emotion.value.toFixed(1)}%</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="time" 
+                  label={{ value: 'Time (seconds)', position: 'bottom' }} 
+                />
+                <YAxis 
+                  label={{ value: 'Duration (seconds)', angle: -90, position: 'left' }} 
+                />
+                <Tooltip 
+                  formatter={(value, name, props) => [
+                    `${value}s`, 
+                    `Emotion: ${props.payload.emotion}`,
+                    `Time: ${props.payload.time}s`
+                  ]}
+                />
+                <Legend />
+                <Line 
+                  type="monotone" 
+                  dataKey="duration" 
+                  name="Emotion Duration" 
+                  stroke="#8884d8" 
+                  activeDot={{ r: 8 }} 
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       )}
+      
+      <div className="emotion-summary">
+        <h4>Emotion Summary</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Emotion</th>
+              <th>Duration (s)</th>
+              <th>Timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            {emotionTimeline.map((item, index) => (
+              <tr key={index}>
+                <td>{item.user}</td>
+                <td>{item.emotion}</td>
+                <td>{item.duration.toFixed(1)}</td>
+                <td>{item.timestamp}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )}
+
 
       {showForm && (
         <RegisterForm

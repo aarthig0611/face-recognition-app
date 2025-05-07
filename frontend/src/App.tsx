@@ -5,26 +5,19 @@ import ImageUpload from './components/ImageUpload';
 import HomePage from './components/HomePage';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import { ThemeProvider } from '../src/components/ThemeContext';
-import "../src/style/Theme.css"
+import './App.css'
 
 const App: React.FC = () => {
   return (
-    <ThemeProvider>
-      <Router>
-        <div className="app-container">
-          <Navbar />
-          <main className="main-content">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/webcam" element={<WebcamFeed />} />
-              <Route path="/upload" element={<ImageUpload />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
-      </Router>
-    </ThemeProvider>
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/webcam" element={<WebcamFeed />} />
+        <Route path="/upload" element={<ImageUpload />} />
+      </Routes>
+      <Footer />
+    </Router>
   );
 };
 

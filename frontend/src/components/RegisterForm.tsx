@@ -6,7 +6,6 @@ import {
   resetForm,
   setRegistrationComplete,
 } from '../redux/userSlice';
-import { useTheme } from './ThemeContext';
 import '../style/RegisterForm.css';
 
 interface RegisterFormProps {
@@ -19,7 +18,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onClose }) => {
     (state: RootState) => state.user
   );
   const dispatch = useDispatch();
-  const { theme } = useTheme();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,7 +59,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onClose }) => {
   if (!showForm) return null;
 
   return (
-    <div className={`register-form ${theme}`} role="dialog" aria-modal="true" aria-labelledby="register-form-title">
+    <div className="register-form" role="dialog" aria-modal="true" aria-labelledby="register-form-title">
       <form onSubmit={handleRegister}>
         <h3 id="register-form-title">Do you want to register?</h3>
         {croppedFace && (
