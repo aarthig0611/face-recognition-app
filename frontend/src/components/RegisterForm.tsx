@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import {
@@ -8,6 +8,7 @@ import {
 } from '../redux/userSlice';
 import { useTheme } from './ThemeContext';
 import '../style/RegisterForm.css';
+import { backendUrl } from '../utils/faceUtils';
 
 interface RegisterFormProps {
   onSuccess?: () => void;
@@ -30,7 +31,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onClose }) => {
     }
 
     try {
-      const response = await fetch('http://localhost:5002/register', {
+      const response = await fetch(`${backendUrl}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
