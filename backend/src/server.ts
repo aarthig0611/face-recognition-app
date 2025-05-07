@@ -8,7 +8,7 @@ import multer from 'multer';
 
 const upload = multer();
 const app = express();
-const PORT = 5002;
+const PORT = process.env.PORT || 5002;
 
 const { Canvas, Image, ImageData } = canvas as any;
 faceapi.env.monkeyPatch({
