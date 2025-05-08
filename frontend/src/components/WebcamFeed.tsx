@@ -420,104 +420,6 @@ const WebcamFeed: React.FC = () => {
         </div>
       )}
 
-      {reportVisible && emotionLog.current.size > 0 && (
-        <div className="emotion-report" ref={reportRef}>
-          <h3 className="emotion-report-title">The Story of Your Emotions</h3>
-          
-          <div className="user-selector">
-            <label>Dive into Emotions of: </label>
-            <select 
-              value={selectedUser || ''}
-              onChange={(e) => setSelectedUser(e.target.value)}
-            >
-              {Array.from(emotionLog.current.keys()).map(user => (
-                <option key={user} value={user}>{user}</option>
-              ))}
-            </select>
-          </div>
-          
-          {selectedUser && (
-            <div className="emotion-timeline">
-              <div className="emotion-chart-align">
-                <h4>Emotions at a Glance: {selectedUser}</h4>
-
-                <motion.div 
-                  className="chart-container"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
-                      <Pie
-                        data={getUserEmotionData()}
-                        dataKey="value"
-                        nameKey="name"
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={window.innerWidth <= 768 ? 100 : 150}
-                        innerRadius={window.innerWidth <= 768 ? 40 : 60}
-                        label={({ name, value }: { name: string; value: number }) => 
-                          window.innerWidth <= 768 ? `${name}` : `${name}: ${value.toFixed(1)}%`
-                        }
-                        animationBegin={0}
-                        animationDuration={1000}
-                        animationEasing="ease-out"
-                      >
-                        {getUserEmotionData().map((entry, index) => (
-                          <Cell 
-                            key={`cell-${index}`} 
-                            fill={colorSchemes[colorScheme][index % colorSchemes[colorScheme].length]}
-                            stroke={theme === 'dark' ? '#1e1e1e' : '#fff'}
-                            strokeWidth={2}
-                          />
-                        ))}
-                      </Pie>
-                      <RechartsTooltip content={<CustomTooltip theme={theme} />} />
-                      <Legend 
-                        // layout={window.innerWidth <= 768 ? "horizontal" : "vertical"}
-                        align={window.innerWidth <= 768 ? "center" : "right"}
-                        verticalAlign={window.innerWidth <= 768 ? "bottom" : "middle"}
-                        formatter={(value: string, entry: any, index: number) => (
-                          <span className="legend-text">
-                            {value} ({getUserEmotionData()[index].value.toFixed(1)}%)
-                          </span>
-                        )}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </motion.div>
-                <div className="color-scheme-selector">
-                  <label>Selected Theme: </label>
-                  <select 
-                    value={colorScheme}
-                    onChange={(e) => setColorScheme(e.target.value as ColorSchemeType)}
-                  >
-                    <option value="vibrant">Vibrant</option>
-                    <option value="pastel">Pastel</option>
-                    <option value="professional">Professional</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="emotion-statistics">
-                <h5>Behind the Feelings</h5>
-                <div className="emotion-statistics-grid">
-                  {getUserEmotionData().map(emotion => (
-                    <div key={emotion.name} className="emotion-stat-item">
-                      <strong>{emotion.name}</strong>
-                      <p>Rank: #{emotion.rank}</p>
-                      <p>Duration: {emotion.duration.toFixed(1)}s</p>
-                      <p>Percentage: {emotion.value.toFixed(1)}%</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
       {showForm && (
         <RegisterForm
           onSuccess={async () => {
@@ -528,6 +430,100 @@ const WebcamFeed: React.FC = () => {
           onClose={handleResumeVideo}
         />
       )}
+      
+      <div className='emotion-report-container'>
+        {reportVisible && emotionLog.current.size > 0 && (
+          <div className="emotion-report" ref={reportRef}>
+            <h3 className="emotion-report-title">The Story of Your Emotions</h3>
+            
+            <div className="user-selector">
+              <label>Dive into Emotions of: </label>
+              <select 
+                value={selectedUser || ''}
+                onChange={(e) => setSelectedUser(e.target.value)}
+              >
+                {Array.from(emotionLog.current.keys()).map(user => (
+                  <option key={user} value={user}>{user}</option>
+                ))}
+              </select>
+            </div>
+            
+            {selectedUser && (
+              <div className="emotion-timeline">
+                <div className="emotion-chart-align">
+                  <h4>Emotions at a Glance: {selectedUser}</h4>
+                  <motion.div 
+                    className="chart-container"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                        <Pie
+                          data={getUserEmotionData()}
+                          dataKey="value"
+                          nameKey="name"
+                          cx="50%"
+                          cy="50%"
+                          outerRadius="100%"
+                          animationBegin={0}
+                          animationDuration={1000}
+                          animationEasing="ease-out"
+                        >
+                          {getUserEmotionData().map((entry, index) => (
+                            <Cell 
+                              key={`cell-${index}`} 
+                              fill={colorSchemes[colorScheme][index % colorSchemes[colorScheme].length]}
+                              stroke={theme === 'dark' ? '#1e1e1e' : '#fff'}
+                              strokeWidth={2}
+                            />
+                          ))}
+                        </Pie>
+                        <RechartsTooltip content={<CustomTooltip theme={theme} />} />
+                        <Legend 
+                          align="center"
+                          verticalAlign="bottom"
+                          layout="horizontal"
+                          formatter={(value: string, entry: any, index: number) => (
+                            <span className="legend-text">
+                              {value} ({getUserEmotionData()[index].value.toFixed(1)}%)
+                            </span>
+                          )}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </motion.div>
+                  <div className="color-scheme-selector">
+                    <label>Selected Theme: </label>
+                    <select 
+                      value={colorScheme}
+                      onChange={(e) => setColorScheme(e.target.value as ColorSchemeType)}
+                    >
+                      <option value="vibrant">Vibrant</option>
+                      <option value="pastel">Pastel</option>
+                      <option value="professional">Professional</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="emotion-statistics">
+                  <h5>Behind the Feelings</h5>
+                  <div className="emotion-statistics-grid">
+                    {getUserEmotionData().map(emotion => (
+                      <div key={emotion.name} className="emotion-stat-item">
+                        <strong>{emotion.name}</strong>
+                        <p>Duration: {emotion.duration.toFixed(1)}s</p>
+                        <p>Percentage: {emotion.value.toFixed(1)}%</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

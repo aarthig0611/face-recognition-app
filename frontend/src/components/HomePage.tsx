@@ -43,32 +43,32 @@ const HomePage: React.FC = () => {
   const techItems = [
     {
       name: "React",
-      icon: "icons8-react-150.png",
+      icon: require("../assets/icons8-react-150.png"),
       description: "Dynamic UI rendering for a smooth user experience."
     },
     {
       name: "Redux",
-      icon: "icons8-redux-150.png",
+      icon: require("../assets/icons8-redux-150.png"),
       description: "Keeps your app state clean and globally synced."
     },
     {
       name: "Express + TypeScript",
-      icon: "icons8-typescript-150.png",
+      icon: require("../assets/icons8-typescript-150.png"),
       description: "Handles backend APIs with speed and structure."
     },
     {
       name: "face-api.js",
-      icon: "icons8-face-150.png",
+      icon: require("../assets/icons8-face-150.png"),
       description: "Detects faces, emotions, and facial features using deep learning."
     },
     {
       name: "HTML5 Canvas",
-      icon: "icons8-html5-150.png",
+      icon: require("../assets/icons8-html5-150.png"),
       description: "Draws bounding boxes and emotion overlays in real time."
     },
     {
       name: "Celebrity Face Dataset",
-      icon: "icons8-kaggle-150.png",
+      icon: require("../assets/icons8-kaggle-150.png"),
       description: "Trains the app to recognize known faces across uploads."
     }
   ];
@@ -77,32 +77,32 @@ const HomePage: React.FC = () => {
     {
       title: "Movie & Media Reviews",
       description: "Capture live emotional reactions during movie trailers, short films, or ad previews to better understand audience sentiment.",
-      image: "1.png"
+      image: "movie_media_review.png"
     },
     {
       title: "Game Development & Testing",
       description: "Gauge player engagement and emotional feedback throughout gameplay for refining user experience and game mechanics.",
-      image: "2.png"
+      image: "game_dev_test.png"
     },
     {
       title: "UI/UX & Product Research",
       description: "Measure how users emotionally respond to new designs or features to make data-driven improvements in usability and design.",
-      image: "1.png"
+      image: "product_review.png"
     },
     {
       title: "Online Learning & Classrooms",
       description: "Track student attention, confusion, or excitement levels during online sessions to adapt teaching methods accordingly.",
-      image: "2.png"
+      image: "online_learning.png"
     },
     {
       title: "Mental Health & Wellness",
       description: "Monitor facial expressions over time to detect emotional patterns that could support therapy or self-awareness tools.",
-      image: "1.png"
+      image: "mental_health.png"
     },
     {
       title: "Retail & Customer Feedback",
       description: "Evaluate customer reactions during product demos, feedback sessions, or surveys to enhance service and product satisfaction.",
-      image: "2.png"
+      image: "customer_feedback.png"
     }
   ];
 
@@ -133,10 +133,8 @@ const HomePage: React.FC = () => {
               transition={{ delay: 0.4, duration: 0.8 }}
             >
               <img 
-                src={theme === 'dark' 
-                  ? "Laptop-with-Digital-Face-Recognition-dark.png" 
-                  : "Laptop-with-Digital-Face-Recognition-light.png"} 
-                alt="Detected face preview" 
+                src={require("../assets/face_recognition_app.png")} 
+                alt="Face Recognition App Preview"
               />
             </motion.div>
           </motion.section>
@@ -220,10 +218,9 @@ const HomePage: React.FC = () => {
                 >
                   <div className="tech-icon">
                     <img src={tech.icon} alt={tech.name} />
+                    <div className="tech-hover-text">{tech.description}</div>
                   </div>
-                  <div className="tech-hover-text">
-                    <strong>{tech.name}</strong><br />{tech.description}
-                  </div>
+                  <div className="tech-name">{tech.name}</div>
                 </motion.div>
               ))}
             </motion.div>

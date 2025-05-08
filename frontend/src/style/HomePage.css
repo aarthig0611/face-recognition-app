@@ -33,40 +33,34 @@
   
   .hero-text h1 {
     font-size: 2.5rem;
-    margin-bottom: 1rem; /* Reduced from 1.5rem */
+    margin-bottom: 1rem;
     line-height: 1.2;
     color: var(--text-color);
-    padding-left: 50px;
+    padding: 0 50px 0;
   }
   
   .hero-text p {
     font-size: 1.2rem;
     color: var(--gray-color);
-    margin-bottom: 1.5rem; /* Reduced from 2rem */
-    padding-left: 50px;
+    margin-bottom: 1.5rem;
+    padding: 0px 50px 0px 50px;
   }
   
   .hero-image img {
     max-width: 100%;
-    height: auto;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
+    height: 50%;
     transition: transform 0.5s ease;
-  }
-  
-  .hero-image:hover img {
-    transform: scale(1.02);
   }
 
   .hero-buttons {
     display: flex;
     gap: 1rem;
-    margin-top: 1rem; /* Reduced from 1.5rem */
-    padding-left: 50px;
+    margin-top: 1rem; 
+    padding: 0px 50px 0px 50px;
   }
   
   .hero-buttons .btn {
-    text-decoration: none; /* Removes underline from links */
+    text-decoration: none;
   }
   
   
@@ -171,6 +165,7 @@
     margin-bottom: 2rem;
     color: var(--text-color);
     position: relative;
+    padding: 0 50px 0;
   }
   
   .info-section h2::after {
@@ -186,8 +181,7 @@
   .info-cards {
     display: flex;
     gap: 2rem;
-    /* margin-top: 2rem; */
-    padding: 20px 20px 0;
+    padding: 20px 50px 0;
   }
   
   .info-card {
@@ -232,19 +226,19 @@
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
     margin-top: 2rem;
-    padding: 20px 20px 0;
+    padding: 20px 50px 0;
   }
   
   .use-card {
     background-color: var(--card-bg);
-    padding: 1.5rem;
+    padding: 0;
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     transition: var(--transition);
     border: 1px solid var(--border-color);
     position: relative;
     overflow: hidden;
-    min-height: 200px;
+    min-height: 250px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -261,36 +255,52 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: 0.2;
+    opacity: 1;
     transition: opacity 0.3s ease;
     z-index: 0;
   }
   
   .use-card:hover::before {
-    opacity: 0.3;
+    opacity: 0.8;
   }
   
   .use-card h4 {
-    margin-bottom: 0.8rem;
-    color: var(--primary-color);
+    margin: 0;
+    padding: 1rem;
+    color: white;
     position: relative;
     z-index: 1;
+    background: rgba(0, 0, 0, 0.7);
+    width: 100%;
+    text-align: left;
   }
   
   .use-card p {
-    color: var(--text-color);
-    position: relative;
+    color: white;
+    position: absolute;
     z-index: 1;
+    bottom: -100%;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.8);
+    transition: bottom 0.3s ease;
+    margin: 0;
+  }
+  
+  .use-card:hover p {
+    bottom: 0;
   }
   
   /* Tech Grid Styles */
   .tech-icon-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 30px;
+    gap: 60px;
     justify-items: center;
     align-items: flex-start;
     text-align: center;
+    padding: 0 200px 0;
   }
   
   .tech-item {
@@ -301,6 +311,8 @@
     padding: 15px;
     transition: var(--transition);
     cursor: default;
+    height: 200px;
+    position: relative;
   }
   
   .tech-icon {
@@ -312,37 +324,60 @@
     align-items: center;
     justify-content: center;
     box-shadow: var(--box-shadow);
-    transition: var(--transition);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
   }
   
   .tech-icon img {
     width: 120px;
     height: 120px;
-    transition: var(--transition);
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
   }
   
   .tech-hover-text {
     width: 100%;
     max-width: 200px;
     opacity: 0;
-    height: 0;
+    height: 100px;
     overflow: hidden;
-    transition: var(--transition);
+    transition: all 0.3s ease;
     font-size: 0.9rem;
     color: var(--text-color);
     text-align: center;
     margin-top: 10px;
+    position: absolute;
+    top: 200px;
+  }
+  
+  .tech-item:hover .tech-icon {
+    border-radius: 12px;
+    width: 200px;
+    height: 200px;
+    background-color: var(--card-bg);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 20px;
+  }
+  
+  .tech-item:hover .tech-icon img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 20px;
   }
   
   .tech-item:hover .tech-hover-text {
     opacity: 1;
+    position: relative;
+    top: 0;
+    color: var(--text-color);
+    padding: 0 15px;
     height: auto;
-    min-height: 60px;
-  }
-  
-  .tech-item:hover .tech-icon {
-    transform: scale(1.05);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
   }
   
   /* Scroll indicator */
@@ -375,7 +410,7 @@
         padding: 2rem 0;
         text-align: center;
         min-height: auto;
-        gap: 2rem; /* Added gap between text and image */
+        gap: 2rem;
       }
     
       .hero-text {
@@ -383,17 +418,17 @@
         flex-direction: column;
         align-items: center;
         text-align: center;
-        width: 100%; /* Ensure full width */
+        width: 100%;
       }
     
       .hero-text h1 {
         font-size: 2rem;
-        margin-bottom: 0.8rem; /* Slightly tighter on mobile */
+        margin-bottom: 0.8rem; 
       }
     
       .hero-text p {
-        margin-bottom: 1.25rem; /* Adjusted for mobile */
-        max-width: 90%; /* Prevent text from stretching full width */
+        margin-bottom: 1.25rem; 
+        max-width: 90%; 
       }
   
     .info-cards {
@@ -404,7 +439,8 @@
   @media (max-width: 768px) {
     .tech-icon-grid {
       grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      gap: 15px;
+      gap: 40px;
+      padding: 0 100px 0;
     }
     
     .tech-icon {
@@ -416,24 +452,68 @@
       width: 60px;
       height: 60px;
     }
+
+    .tech-item {
+      height: 200px;
+    }
+
+    .tech-item:hover .tech-icon {
+      width: 150px;
+      height: 150px;
+    }
+
+    .tech-item:hover .tech-icon img {
+      width: 50px;
+      height: 50px;
+    }
+
+    .tech-hover-text {
+      top: 150px;
+      height: 100px;
+    }
+
+    .tech-item:hover .tech-hover-text {
+      top: 0;
+    }
   }
   
   @media (max-width: 480px) {
-    .hero-text h1 {
-        font-size: 1.8rem;
-        margin-bottom: 0.75rem;
-      }
-    
-      .hero-text p {
-        font-size: 1.1rem;
-        margin-bottom: 1rem;
-      }
-    
-      .hero-buttons {
-        gap: 0.75rem;
-      }
-  
     .tech-icon-grid {
       grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+      padding: 0 50px 0;
+    }
+
+    .tech-item {
+      height: 180px;
+    }
+
+    .tech-icon {
+      width: 80px;
+      height: 80px;
+    }
+    
+    .tech-icon img {
+      width: 50px;
+      height: 50px;
+    }
+
+    .tech-item:hover .tech-icon {
+      width: 120px;
+      height: 120px;
+    }
+
+    .tech-item:hover .tech-icon img {
+      width: 40px;
+      height: 40px;
+    }
+
+    .tech-hover-text {
+      top: 130px;
+      height: 100px;
+    }
+
+    .tech-item:hover .tech-hover-text {
+      top: 0;
     }
   }

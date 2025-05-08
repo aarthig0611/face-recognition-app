@@ -29,8 +29,8 @@ const Footer: React.FC = () => {
             <div className="footer-section contact-section">
               <h3>Contact Information</h3>
               <p>Aarthi Ganesan</p>
-              <p><img src="icons8-email-50.png" alt="Email" className="contact-icon" /> <a href="mailto:aarthig0611@gmail.com">aarthig0611@gmail.com</a></p>
-              <p><img src="icons8-github-50.png" alt="GitHub" className="contact-icon" /> <a href="https://github.com/aarthig0611/face-recognition-app" target="_blank" rel="noopener noreferrer">Face Recognition App</a></p>
+              <p><img src={require("../assets/icons8-email-50.png")} alt="Email" className="contact-icon" /> <a href="mailto:aarthig0611@gmail.com">aarthig0611@gmail.com</a></p>
+              <p><img src={require("../assets/icons8-github-50.png")} alt="GitHub" className="contact-icon" /> <a href="https://github.com/aarthig0611/face-recognition-app" target="_blank" rel="noopener noreferrer">Face Recognition App</a></p>
             </div>
           </section>
 
