@@ -99,7 +99,7 @@
     filter: var(--icon-filter);
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 440px) {
     .footer-content {
       flex-direction: column;
       gap: 2rem;

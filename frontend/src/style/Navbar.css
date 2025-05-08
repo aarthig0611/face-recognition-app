@@ -70,21 +70,36 @@
   background: none;
   border: 1px solid var(--border-color);
   color: var(--text-color);
-  padding: 0.5rem 1rem;
-  border-radius: var(--border-radius);
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.3s ease;
+  background-color: var(--hover-background);
 }
 
 .theme-toggle-button:hover {
   background-color: var(--hover-color);
   transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .theme-toggle-button:active {
   transform: translateY(0);
+}
+
+.theme-toggle-button img {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle-button:hover img {
+  transform: rotate(15deg);
 }
 
 .hamburger {
@@ -117,7 +132,7 @@
   transform: translateY(-9px) rotate(-45deg);
 }
 
-@media (max-width: 920px) {
+@media (max-width: 1089px) {
   .navbar-container {
     padding: 1rem;
   }

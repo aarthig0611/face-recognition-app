@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from './ThemeContext';
+import sunIcon from '../assets/icons8-sun-50.png';
+import moonIcon from '../assets/icons8-moon-50.png';
 import '../style/Navbar.css';
 
 const Navbar: React.FC = () => {
@@ -69,7 +71,11 @@ const Navbar: React.FC = () => {
               onClick={toggleTheme}
               aria-label="Toggle dark mode"
             >
-              {theme === 'light' ? 'Dark' : 'Light'}
+              <img 
+                src={theme === 'light' ? moonIcon : sunIcon} 
+                alt={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+                style={{ width: '24px', height: '24px' }}
+              />
             </button>
           </div>
         </div>

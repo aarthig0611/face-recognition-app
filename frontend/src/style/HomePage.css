@@ -177,6 +177,13 @@
     margin: 10px auto;
     border-radius: 2px;
   }
+
+  .info-section p {
+    font-size: 1.1rem;
+    color: var(--gray-color);
+    margin-bottom: 1.5rem;
+    padding: 0px 50px 0px 50px;
+  }
   
   .info-cards {
     display: flex;
@@ -404,7 +411,7 @@
   }
   
   /* Responsive Styles */
-  @media (max-width: 1017px) {
+  @media (max-width: 1089px) {
     .hero {
         flex-direction: column;
         padding: 2rem 0;
