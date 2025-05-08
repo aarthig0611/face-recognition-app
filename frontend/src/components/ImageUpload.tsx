@@ -17,7 +17,13 @@ interface FaceBox {
 const MAX_IMAGE_WIDTH = 800;
 const MAX_IMAGE_HEIGHT = 600;
 
-const ImageUpload: React.FC = () => {
+type Page = 'home' | 'webcam' | 'upload';
+
+interface ImageUploadProps {
+  onNavigate: (page: Page) => void;
+}
+
+const ImageUpload: React.FC<ImageUploadProps> = ({ onNavigate }) => {
   const imageRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -152,7 +158,7 @@ const ImageUpload: React.FC = () => {
   };
 
   return (
-    <div className="image-upload-container">
+    <div className={`image-upload-container ${theme}`}>
       {image && (
         <div className="image-and-faces-container">
           <div className="image-preview-container">

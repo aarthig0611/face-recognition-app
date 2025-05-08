@@ -65,7 +65,13 @@ const CustomTooltip: React.FC<{ active?: boolean; payload?: Array<{ payload: Emo
   return null;
 };
 
-const WebcamFeed: React.FC = () => {
+type Page = 'home' | 'webcam' | 'upload';
+
+interface WebcamFeedProps {
+  onNavigate: (page: Page) => void;
+}
+
+const WebcamFeed: React.FC<WebcamFeedProps> = ({ onNavigate }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const faceMatcherRef = useRef<faceapi.FaceMatcher | null>(null);
@@ -323,6 +329,10 @@ const WebcamFeed: React.FC = () => {
   const scrollToReport = () => {
     reportRef.current?.scrollIntoView({ behavior: 'smooth' });
     setShowPopup(false);
+  };
+
+  const handleBackToHome = () => {
+    onNavigate('home');
   };
 
   return (

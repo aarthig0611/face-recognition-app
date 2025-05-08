@@ -1,24 +1,22 @@
 import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from './ThemeContext';
 import '../style/Footer.css';
 
-const Footer: React.FC = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
+type Page = 'home' | 'webcam' | 'upload';
+
+interface FooterProps {
+  onNavigate: (page: Page) => void;
+}
+
+const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   const { theme } = useTheme();
 
   const handleScrollTo = (id: string) => {
-    if (location.pathname !== '/') {
-      navigate('/', { replace: false });
-      setTimeout(() => {
-        const el = document.getElementById(id);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    } else {
+    onNavigate('home');
+    setTimeout(() => {
       const el = document.getElementById(id);
       if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }
+    }, 100);
   };
 
   return (

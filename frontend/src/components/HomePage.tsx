@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useTheme } from '../components/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import '../style/HomePage.css';
 
-const HomePage: React.FC = () => {
+type Page = 'home' | 'webcam' | 'upload';
+
+interface HomePageProps {
+  onNavigate: (page: Page) => void;
+}
+
+const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { theme } = useTheme();
   const [loaded, setLoaded] = useState(false);
@@ -122,8 +127,8 @@ const HomePage: React.FC = () => {
               <motion.h1 variants={slideUp}>Webcam Image Feed with Facial Recognition</motion.h1>
               <motion.p variants={slideUp}>Smart facial recognition at your fingertips.</motion.p>
               <motion.div className="hero-buttons" variants={slideUp}>
-                <Link to="/webcam" className="btn pulse-animation">Start Live Detection</Link>
-                <Link to="/upload" className="btn btn-secondary pulse-animation">Analyze Photo</Link>
+                <button onClick={() => onNavigate('webcam')} className="btn pulse-animation">Start Live Detection</button>
+                <button onClick={() => onNavigate('upload')} className="btn btn-secondary pulse-animation">Analyze Photo</button>
               </motion.div>
             </motion.div>
             <motion.div 

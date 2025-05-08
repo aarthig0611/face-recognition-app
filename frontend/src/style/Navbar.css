@@ -25,7 +25,17 @@
   font-weight: bold;
   color: var(--primary-color);
   text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: var(--transition);
   z-index: 1001;
+}
+
+.logo:hover {
+  color: var(--primary-hover);
+  transform: translateY(-1px);
 }
 
 .nav-links {

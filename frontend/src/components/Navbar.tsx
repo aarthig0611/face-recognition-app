@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from './ThemeContext';
 import sunIcon from '../assets/icons8-sun-50.png';
 import moonIcon from '../assets/icons8-moon-50.png';
 import '../style/Navbar.css';
 
-const Navbar: React.FC = () => {
+type Page = 'home' | 'webcam' | 'upload';
+
+interface NavbarProps {
+  currentPage: Page;
+  onNavigate: (page: Page) => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 920);
-  const navigate = useNavigate();
-  const location = useLocation();
   const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
@@ -29,8 +33,8 @@ const Navbar: React.FC = () => {
 
   const handleScrollTo = (id: string) => {
     closeMenu();
-    if (location.pathname !== '/') {
-      navigate('/', { replace: false });
+    if (currentPage !== 'home') {
+      onNavigate('home');
       setTimeout(() => {
         const el = document.getElementById(id);
         if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -43,19 +47,19 @@ const Navbar: React.FC = () => {
 
   const handleActionClick = () => {
     closeMenu();
-    if (location.pathname === '/webcam') {
-      navigate('/upload');
+    if (currentPage === 'webcam') {
+      onNavigate('upload');
     } else {
-      navigate('/webcam');
+      onNavigate('webcam');
     }
   };
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <Link to="/" className="logo" onClick={closeMenu}>
+        <button onClick={() => onNavigate('home')} className="logo">
           FaceRec
-        </Link>
+        </button>
 
         <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
           <button onClick={() => handleScrollTo('how-it-works')}>How it work</button>
@@ -63,7 +67,7 @@ const Navbar: React.FC = () => {
           <button onClick={() => handleScrollTo('use-cases')}>How it's used</button>
           <button onClick={() => handleScrollTo('contact')}>How to reach us</button>
           <button className={'web-image-option'} onClick={handleActionClick}>
-            {location.pathname === '/webcam' ? 'Analyze Photo' : 'Start Live Detection'}
+            {currentPage === 'webcam' ? 'Analyze Photo' : 'Start Live Detection'}
           </button>
           <div className="theme-toggle-container">
             <button 
