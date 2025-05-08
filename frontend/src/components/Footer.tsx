@@ -55,7 +55,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <ul>
               <li><button onClick={() => handleScrollTo('start')}>Home</button></li>
               <li><button onClick={() => handleScrollTo('how-it-works')}>How it works</button></li>
-              <li><button onClick={() => handleScrollTo('about')}>How it's build</button></li>
+              <li><button onClick={() => handleScrollTo('about')}>How it's made</button></li>
               <li><button onClick={() => handleScrollTo('use-cases')}>How it's used</button></li>
               <li><a href="https://github.com/aarthig0611/face-recognition-app" target="_blank" rel="noopener noreferrer">GitHub Link</a></li>
             </ul>

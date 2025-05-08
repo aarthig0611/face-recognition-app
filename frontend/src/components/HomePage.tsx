@@ -51,58 +51,58 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   const techItems = [
     // Frontend Technologies
     {
-      name: "React",
+      name: "React:",
       icon: require("../assets/icons8-react-150.png"),
       description: "Dynamic UI rendering for a smooth user experience."
     },
     {
-      name: "Redux",
+      name: "Redux:",
       icon: require("../assets/icons8-redux-150.png"),
       description: "Keeps your app state clean and globally synced."
     },
     {
-      name: "TypeScript",
+      name: "TypeScript:",
       icon: require("../assets/icons8-typescript-150.png"),
       description: "Adds type safety and scalability to JavaScript code."
     },
     {
-      name: "HTML5 Canvas",
+      name: "HTML5 Canvas:",
       icon: require("../assets/icons8-html-5-150.png"),
       description: "Draws bounding boxes and emotion overlays in real time."
     },
   
     // Backend Technologies
     {
-      name: "Express",
+      name: "Express:",
       icon: require("../assets/icons8-express-js-150.png"), // Make sure this file exists
       description: "Backend framework for handling APIs and routes efficiently."
     },
   
     // AI/ML Technologies
     {
-      name: "TensorFlow.js",
+      name: "TensorFlow.js:",
       icon: require("../assets/icons8-tensorflow-150.png"), // Make sure this file exists
       description: "Runs ML models directly in the browser for facial emotion analysis."
     },
     {
-      name: "face-api.js",
+      name: "face-api.js:",
       icon: require("../assets/icons8-rest-api-100.png"),
       description: "Detects faces, emotions, and facial features using deep learning."
     },
     {
-      name: "Celebrity Face Dataset",
+      name: "Kaggle:",
       icon: require("../assets/icons8-kaggle-150.png"),
-      description: "Trains the app to recognize known faces across uploads."
+      description: "Used Celebrity Face Dataset to trains the app to recognize known faces across uploads."
     },
   
     // Design & Infrastructure
     {
-      name: "Figma",
+      name: "Figma:",
       icon: require("../assets/icons8-figma-150.png"), 
       description: "Design prototyping and UI layout planning done in Figma."
     },
     {
-      name: "Azure",
+      name: "Azure:",
       icon: require("../assets/icons8-azure-150.png"), 
       description: "Cloud platform used for app hosting and deployment."
     }
@@ -146,18 +146,18 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 4,
+    slidesToShow: 3,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
     responsive: [
       {
         breakpoint: 1200,
-        settings: { slidesToShow: 3 }
+        settings: { slidesToShow: 2 }
       },
       {
         breakpoint: 768,
-        settings: { slidesToShow: 2 }
+        settings: { slidesToShow: 1 }
       },
       {
         breakpoint: 480,

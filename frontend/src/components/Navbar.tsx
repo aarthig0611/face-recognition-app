@@ -64,7 +64,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
         <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
           <button onClick={() => handleScrollTo('how-it-works')}>How it works</button>
           <button onClick={() => handleScrollTo('about')}>How it's build</button>
-          <button onClick={() => handleScrollTo('use-cases')}>How it's used</button>
+          <button onClick={() => handleScrollTo('use-cases')}>How it's made</button>
           <button onClick={() => handleScrollTo('contact')}>How to reach us</button>
           <button className={'web-image-option'} onClick={handleActionClick}>
             {currentPage === 'webcam' ? 'Analyze Photo' : 'Start Live Detection'}
