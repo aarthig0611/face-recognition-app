@@ -26,9 +26,27 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           <section id="contact">
             <div className="footer-section contact-section">
               <h3>Contact Information</h3>
-              <p>Aarthi Ganesan</p>
-              <p><img src={require("../assets/icons8-email-50.png")} alt="Email" className="contact-icon" /> <a href="mailto:aarthig0611@gmail.com">aarthig0611@gmail.com</a></p>
-              <p><img src={require("../assets/icons8-github-50.png")} alt="GitHub" className="contact-icon" /> <a href="https://github.com/aarthig0611/face-recognition-app" target="_blank" rel="noopener noreferrer">Face Recognition App</a></p>
+              <p><strong>Aarthi Ganesan</strong></p>
+              <p>
+                <img 
+                  src={theme === 'light' 
+                    ? require("../assets/dark-icons8-email-50.png") 
+                    : require("../assets/white-icons8-email-50.png")} 
+                  alt="Email" 
+                  className="contact-icon" 
+                /> 
+                <a href="mailto:aarthig0611@gmail.com">aarthig0611@gmail.com</a>
+              </p>
+              <p>
+                <img 
+                  src={theme === 'light' 
+                    ? require("../assets/dark-icons8-linkedin-50.png") 
+                    : require("../assets/icons8-linkedin-50.png")} 
+                  alt="LinkedIn" 
+                  className="contact-icon" 
+                /> 
+                <a href="https://www.linkedin.com/in/aarthi-ganesan/" target="_blank" rel="noopener noreferrer">aarthi-ganesan</a>
+              </p>
             </div>
           </section>
 
@@ -39,6 +57,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li><button onClick={() => handleScrollTo('how-it-works')}>How it works</button></li>
               <li><button onClick={() => handleScrollTo('about')}>How it's build</button></li>
               <li><button onClick={() => handleScrollTo('use-cases')}>How it's used</button></li>
+              <li><a href="https://github.com/aarthig0611/face-recognition-app" target="_blank" rel="noopener noreferrer">GitHub Link</a></li>
             </ul>
           </div>
         </div>

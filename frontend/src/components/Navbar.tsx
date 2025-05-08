@@ -62,7 +62,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
         </button>
 
         <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
-          <button onClick={() => handleScrollTo('how-it-works')}>How it work</button>
+          <button onClick={() => handleScrollTo('how-it-works')}>How it works</button>
           <button onClick={() => handleScrollTo('about')}>How it's build</button>
           <button onClick={() => handleScrollTo('use-cases')}>How it's used</button>
           <button onClick={() => handleScrollTo('contact')}>How to reach us</button>

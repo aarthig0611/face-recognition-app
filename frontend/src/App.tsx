@@ -18,6 +18,17 @@ const App: React.FC = () => {
   const handleNavigate = (page: Page) => {
     setCurrentPage(page);
     localStorage.setItem('currentPage', page);
+    switch (page) {
+      case 'home':
+        window.location.hash = 'homepage';
+        break;
+      case 'webcam':
+        window.location.hash = 'webcam';
+        break;
+      case 'upload':
+        window.location.hash = 'upload';
+        break;
+    }
   };
 
   const renderPage = () => {

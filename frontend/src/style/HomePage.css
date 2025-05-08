@@ -32,7 +32,7 @@
   }
   
   .hero-text h1 {
-    font-size: 2.5rem;
+    font-size: 3.5rem;
     margin-bottom: 1rem;
     line-height: 1.2;
     color: var(--text-color);
@@ -48,7 +48,7 @@
   
   .hero-image img {
     max-width: 100%;
-    height: 50%;
+    max-height: 70%;
     transition: transform 0.5s ease;
   }
 
@@ -61,8 +61,11 @@
   
   .hero-buttons .btn {
     text-decoration: none;
+    min-width: 200px;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    font-weight: 600;
   }
-  
   
   .btn {
     padding: 1rem 1.5rem;
@@ -72,6 +75,9 @@
     display: inline-block;
     position: relative;
     overflow: hidden;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   }
   
   .btn::after {
@@ -127,6 +133,7 @@
   .btn:hover {
     background-color: var(--primary-hover);
     transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   }
   
   .btn-secondary {
@@ -158,6 +165,7 @@
     padding: 4rem 0;
     scroll-margin-top: 100px;
     text-align: center;
+    overflow: visible;
   }
   
   .info-section h2 {
@@ -230,10 +238,10 @@
   
   .use-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(15.625rem, 1fr));
     gap: 1.5rem;
     margin-top: 2rem;
-    padding: 20px 50px 0;
+    padding: 1.25rem 12.5rem 0 12.5rem;
   }
   
   .use-card {
@@ -300,40 +308,81 @@
   }
   
   /* Tech Grid Styles */
-  .tech-icon-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 60px;
-    justify-items: center;
-    align-items: flex-start;
-    text-align: center;
-    padding: 0 200px 0;
+  .info-section .tech-icon-grid {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 0;
+  }
+  
+  .info-section .slick-slider {
+    position: relative;
+    width: 100%;
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 0;
+  }
+  
+  .info-section .slick-list {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .info-section .slick-prev,
+  .info-section .slick-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .info-section .slick-prev {
+    left: -1.5rem;
+  }
+  
+  .info-section .slick-next {
+    right: -1.5rem;
+  }
+  
+  .info-section .slick-prev:before,
+  .info-section .slick-next:before {
+    font-size: 2rem;
+    color: var(--primary-color);
+    opacity: 0.85;
   }
   
   .tech-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
-    padding: 15px;
-    transition: var(--transition);
-    cursor: default;
-    height: 200px;
-    position: relative;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
   }
   
   .tech-icon {
-    background-color: var(--bg-color);
-    border-radius: 50%;
-    width: 150px;
-    height: 150px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: var(--box-shadow);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
+    margin: 0 auto;
+  }
+  
+  .tech-name {
+    text-align: center;
+    width: 100%;
+    margin-top: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-color);
+    word-break: break-word;
+    line-height: 1.2;
   }
   
   .tech-icon img {
@@ -441,13 +490,17 @@
     .info-cards {
       flex-direction: column;
     }
+
+    .use-cards {
+      padding: 1.25rem 6.25rem 0 6.25rem; /* 20px 100px 0 100px */
+    }
   }
   
   @media (max-width: 768px) {
     .tech-icon-grid {
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      gap: 40px;
-      padding: 0 100px 0;
+      grid-template-columns: repeat(auto-fit, minmax(6.25rem, 1fr));
+      gap: 2.5rem;
+      padding: 0 6.25rem 0;
     }
     
     .tech-icon {
@@ -482,13 +535,29 @@
     .tech-item:hover .tech-hover-text {
       top: 0;
     }
+
+    .hero-buttons {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .hero-buttons .btn {
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .use-cards {
+      padding: 1.25rem 3.125rem 0 3.125rem; /* 20px 50px 0 50px */
+      gap: 1.25rem; /* 20px */
+    }
   }
   
   @media (max-width: 480px) {
     .tech-icon-grid {
       grid-template-columns: repeat(2, 1fr);
-      gap: 30px;
-      padding: 0 50px 0;
+      gap: 1.875rem;
+      padding: 0 3.125rem 0;
     }
 
     .tech-item {
@@ -522,5 +591,60 @@
 
     .tech-item:hover .tech-hover-text {
       top: 0;
+    }
+
+    .use-cards {
+      padding: 1.25rem 1.25rem 0 1.25rem; /* 20px 20px 0 20px */
+      gap: 0.9375rem; /* 15px */
+    }
+  }
+
+  @media (max-width: 900px) {
+    .info-section .slick-slider {
+      max-width: 100%;
+    }
+    .info-section .slick-prev,
+    .info-section .slick-next {
+      width: 2rem;
+      height: 2rem;
+    }
+    .info-section .slick-prev {
+      left: -1rem;
+    }
+    .info-section .slick-next {
+      right: -1rem;
+    }
+    .info-section .slick-prev:before,
+    .info-section .slick-next:before {
+      font-size: 1.5rem;
+    }
+    .tech-icon {
+      width: 7rem;
+      height: 7rem;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .info-section .slick-slider {
+      max-width: 100%;
+    }
+    .info-section .slick-prev,
+    .info-section .slick-next {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+    .info-section .slick-prev {
+      left: -0.5rem;
+    }
+    .info-section .slick-next {
+      right: -0.5rem;
+    }
+    .info-section .slick-prev:before,
+    .info-section .slick-next:before {
+      font-size: 1.1rem;
+    }
+    .tech-icon {
+      width: 4.5rem;
+      height: 4.5rem;
     }
   }

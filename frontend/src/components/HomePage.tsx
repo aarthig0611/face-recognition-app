@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useTheme } from '../components/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import '../style/HomePage.css';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 type Page = 'home' | 'webcam' | 'upload';
 
@@ -46,6 +49,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   };
 
   const techItems = [
+    // Frontend Technologies
     {
       name: "React",
       icon: require("../assets/icons8-react-150.png"),
@@ -57,26 +61,53 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       description: "Keeps your app state clean and globally synced."
     },
     {
-      name: "Express + TypeScript",
+      name: "TypeScript",
       icon: require("../assets/icons8-typescript-150.png"),
-      description: "Handles backend APIs with speed and structure."
-    },
-    {
-      name: "face-api.js",
-      icon: require("../assets/icons8-face-150.png"),
-      description: "Detects faces, emotions, and facial features using deep learning."
+      description: "Adds type safety and scalability to JavaScript code."
     },
     {
       name: "HTML5 Canvas",
-      icon: require("../assets/icons8-html5-150.png"),
+      icon: require("../assets/icons8-html-5-150.png"),
       description: "Draws bounding boxes and emotion overlays in real time."
+    },
+  
+    // Backend Technologies
+    {
+      name: "Express",
+      icon: require("../assets/icons8-express-js-150.png"), // Make sure this file exists
+      description: "Backend framework for handling APIs and routes efficiently."
+    },
+  
+    // AI/ML Technologies
+    {
+      name: "TensorFlow.js",
+      icon: require("../assets/icons8-tensorflow-150.png"), // Make sure this file exists
+      description: "Runs ML models directly in the browser for facial emotion analysis."
+    },
+    {
+      name: "face-api.js",
+      icon: require("../assets/icons8-rest-api-100.png"),
+      description: "Detects faces, emotions, and facial features using deep learning."
     },
     {
       name: "Celebrity Face Dataset",
       icon: require("../assets/icons8-kaggle-150.png"),
       description: "Trains the app to recognize known faces across uploads."
+    },
+  
+    // Design & Infrastructure
+    {
+      name: "Figma",
+      icon: require("../assets/icons8-figma-150.png"), 
+      description: "Design prototyping and UI layout planning done in Figma."
+    },
+    {
+      name: "Azure",
+      icon: require("../assets/icons8-azure-150.png"), 
+      description: "Cloud platform used for app hosting and deployment."
     }
   ];
+  
 
   const useCases = [
     {
@@ -110,6 +141,30 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       image: "customer_feedback.png"
     }
   ];
+
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    responsive: [
+      {
+        breakpoint: 1200,
+        settings: { slidesToShow: 3 }
+      },
+      {
+        breakpoint: 768,
+        settings: { slidesToShow: 2 }
+      },
+      {
+        breakpoint: 480,
+        settings: { slidesToShow: 1 }
+      }
+    ]
+  };
 
   return (
     <div className={`homepage-container ${loaded ? 'loaded' : ''}`}>
@@ -195,7 +250,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       <div className="how-its-made-container">
         <div className="container-align">
           <motion.section 
-            id="about" 
+            id="about"
             className="info-section"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -214,20 +269,22 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               whileInView="visible"
               viewport={{ once: true }}
             >
-              {techItems.map((tech, index) => (
-                <motion.div 
-                  key={tech.name}
-                  className="tech-item"
-                  variants={slideUp}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <div className="tech-icon">
-                    <img src={tech.icon} alt={tech.name} />
-                    <div className="tech-hover-text">{tech.description}</div>
-                  </div>
-                  <div className="tech-name">{tech.name}</div>
-                </motion.div>
-              ))}
+              <Slider {...sliderSettings}>
+                {techItems.map((tech, index) => (
+                  <motion.div 
+                    key={tech.name}
+                    className="tech-item"
+                    variants={slideUp}
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    <div className="tech-icon">
+                      <img src={tech.icon} alt={tech.name} />
+                      <div className="tech-hover-text"><strong>{tech.name}</strong> {tech.description}</div>
+                    </div>
+
+                  </motion.div>
+                ))}
+              </Slider>
             </motion.div>
           </motion.section>
         </div>
