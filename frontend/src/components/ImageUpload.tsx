@@ -29,6 +29,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onNavigate }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const faceMatcherRef = useRef<faceapi.FaceMatcher | null>(null);
   const unknownHashes = useRef<Set<string>>(new Set());
+  const imageContainerRef = useRef<HTMLDivElement>(null);
+  const unknownFacesRef = useRef<HTMLDivElement>(null);
   
   const [image, setImage] = useState<string | null>(null);
   const [unknownFaces, setUnknownFaces] = useState<FaceBox[]>([]);
@@ -36,6 +38,23 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onNavigate }) => {
   
   const dispatch = useDispatch();
   const { theme } = useTheme();
+
+  useEffect(() => {
+    const updateUnknownFacesHeight = () => {
+      if (imageContainerRef.current && unknownFacesRef.current) {
+        const imageHeight = imageContainerRef.current.offsetHeight;
+        unknownFacesRef.current.style.height = `${imageHeight}px`;
+      }
+    };
+
+    // Update height initially and on window resize
+    updateUnknownFacesHeight();
+    window.addEventListener('resize', updateUnknownFacesHeight);
+
+    return () => {
+      window.removeEventListener('resize', updateUnknownFacesHeight);
+    };
+  }, [image]); // Re-run when image changes
 
   useEffect(() => {
     const init = async () => {
@@ -121,7 +140,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onNavigate }) => {
           ctx.strokeRect(x, y, width, height);
           
           ctx.font = '14px Arial';
-          ctx.fillStyle = theme === 'dark' ? '#8ab4f8' : 'lime';
+          ctx.fillStyle = 'lime';
           ctx.fillText(bestMatch.label, x, y - 30);
           ctx.fillText(`${Math.round(result.age)} yrs | ${result.gender}`, x, y - 15);
           ctx.fillText(`Emotion: ${getTopExpression(result.expressions)}`, x, y + height + 20);
@@ -161,7 +180,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onNavigate }) => {
     <div className={`image-upload-container ${theme}`}>
       {image && (
         <div className="image-and-faces-container">
-          <div className="image-preview-container">
+          <div className="image-preview-container" ref={imageContainerRef}>
             <div className="relative">
               <img
                 ref={imageRef}
@@ -175,7 +194,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onNavigate }) => {
           </div>
 
           {unknownFaces.length > 0 && (
-            <div className="unknown-faces-section">
+            <div className="unknown-faces-section" ref={unknownFacesRef}>
               <h4 className="section-title">We spotted some new faces!</h4>
               <p className="section-subtitle">Tap a photo to help us get to know them</p>
               <div className="unknown-faces-grid">
