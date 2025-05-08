@@ -2,8 +2,9 @@
 .webcam-container {
   padding: 20px;
   padding-top: 120px;
-  max-width: 1200px;
+  max-width: 1440px;
   margin: 0 auto;
+  min-height: calc(100vh - 200px);
   color: var(--text-color);
 }
 
@@ -159,12 +160,24 @@
   color: var(--text-color);
   border: 1px solid var(--border-color);
 }
+.emotion-chart-align {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.emotion-timeline h4 {
+  margin-bottom: 10px;
+  align-self: center;
+}
 
 /* Chart Styles */
 .chart-container {
   width: 100%;
   height: 400px;
   margin: 0 auto;
+  position: relative;
+  overflow: hidden;
 }
 
 .color-scheme-selector {
@@ -214,7 +227,7 @@
 }
 
 .analysis-popup {
-  background-color: var(--background-color);
+  background-color: var(--secondary-color);
   padding: 30px;
   border-radius: 15px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
@@ -307,6 +320,30 @@
   }
 }
 
+/* Chart Legend Styles */
+.recharts-legend-wrapper {
+  position: absolute !important;
+  right: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: auto !important;
+  max-width: 200px !important;
+}
+
+.recharts-legend-item {
+  display: flex !important;
+  align-items: center !important;
+  margin: 8px 0 !important;
+}
+
+.legend-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-left: 8px;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
 /* Responsive Styles */
 @media screen and (max-width: 768px) {
   .main-content {
@@ -335,25 +372,30 @@
 
   .chart-container {
     height: 300px;
-  }
-
-  .recharts-wrapper {
-    transform: scale(0.8);
-    transform-origin: center;
+    padding-bottom: 60px; /* Space for legend */
   }
 
   .recharts-legend-wrapper {
     position: relative !important;
+    right: auto !important;
+    top: auto !important;
     transform: none !important;
-    left: 0 !important;
-    top: 0 !important;
     width: 100% !important;
+    max-width: 100% !important;
     margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
   }
 
   .recharts-legend-item {
-    display: block;
-    margin: 5px 0;
+    margin: 4px 8px !important;
+  }
+
+  .recharts-wrapper {
+    transform: scale(0.9);
+    transform-origin: center;
   }
 
   .emotion-statistics-grid {
@@ -363,7 +405,7 @@
   .analysis-popup {
     padding: 20px;
     margin: 10px;
-    max-width: 100%;
+    max-width: 60%;
   }
 
   .popup-title {
@@ -416,10 +458,19 @@
 
   .chart-container {
     height: 250px;
+    padding-bottom: 80px; /* More space for legend on smaller screens */
   }
 
   .recharts-wrapper {
-    transform: scale(0.7);
+    transform: scale(0.8);
+  }
+
+  .recharts-legend-item {
+    margin: 2px 4px !important;
+  }
+
+  .legend-text {
+    font-size: 0.8rem;
   }
 
   .analysis-popup {
@@ -449,3 +500,4 @@
     grid-template-columns: 1fr;
   }
 }
+

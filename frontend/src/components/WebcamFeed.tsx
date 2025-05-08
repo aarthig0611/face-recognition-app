@@ -422,10 +422,10 @@ const WebcamFeed: React.FC = () => {
 
       {reportVisible && emotionLog.current.size > 0 && (
         <div className="emotion-report" ref={reportRef}>
-          <h3 className="emotion-report-title">Emotion Timeline Report</h3>
+          <h3 className="emotion-report-title">The Story of Your Emotions</h3>
           
           <div className="user-selector">
-            <label>Select User: </label>
+            <label>Dive into Emotions of: </label>
             <select 
               value={selectedUser || ''}
               onChange={(e) => setSelectedUser(e.target.value)}
@@ -438,69 +438,70 @@ const WebcamFeed: React.FC = () => {
           
           {selectedUser && (
             <div className="emotion-timeline">
-              <h4>Emotion Distribution for {selectedUser}</h4>
-              
-              <div className="color-scheme-selector">
-                <label>Color Scheme: </label>
-                <select 
-                  value={colorScheme}
-                  onChange={(e) => setColorScheme(e.target.value as ColorSchemeType)}
+              <div className="emotion-chart-align">
+                <h4>Emotions at a Glance: {selectedUser}</h4>
+
+                <motion.div 
+                  className="chart-container"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5 }}
                 >
-                  <option value="vibrant">Vibrant</option>
-                  <option value="pastel">Pastel</option>
-                  <option value="professional">Professional</option>
-                </select>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                      <Pie
+                        data={getUserEmotionData()}
+                        dataKey="value"
+                        nameKey="name"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={window.innerWidth <= 768 ? 100 : 150}
+                        innerRadius={window.innerWidth <= 768 ? 40 : 60}
+                        label={({ name, value }: { name: string; value: number }) => 
+                          window.innerWidth <= 768 ? `${name}` : `${name}: ${value.toFixed(1)}%`
+                        }
+                        animationBegin={0}
+                        animationDuration={1000}
+                        animationEasing="ease-out"
+                      >
+                        {getUserEmotionData().map((entry, index) => (
+                          <Cell 
+                            key={`cell-${index}`} 
+                            fill={colorSchemes[colorScheme][index % colorSchemes[colorScheme].length]}
+                            stroke={theme === 'dark' ? '#1e1e1e' : '#fff'}
+                            strokeWidth={2}
+                          />
+                        ))}
+                      </Pie>
+                      <RechartsTooltip content={<CustomTooltip theme={theme} />} />
+                      <Legend 
+                        // layout={window.innerWidth <= 768 ? "horizontal" : "vertical"}
+                        align={window.innerWidth <= 768 ? "center" : "right"}
+                        verticalAlign={window.innerWidth <= 768 ? "bottom" : "middle"}
+                        formatter={(value: string, entry: any, index: number) => (
+                          <span className="legend-text">
+                            {value} ({getUserEmotionData()[index].value.toFixed(1)}%)
+                          </span>
+                        )}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </motion.div>
+                <div className="color-scheme-selector">
+                  <label>Selected Theme: </label>
+                  <select 
+                    value={colorScheme}
+                    onChange={(e) => setColorScheme(e.target.value as ColorSchemeType)}
+                  >
+                    <option value="vibrant">Vibrant</option>
+                    <option value="pastel">Pastel</option>
+                    <option value="professional">Professional</option>
+                  </select>
+                </div>
               </div>
 
-              <motion.div 
-                className="chart-container"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
-                    <Pie
-                      data={getUserEmotionData()}
-                      dataKey="value"
-                      nameKey="name"
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={window.innerWidth <= 768 ? 100 : 150}
-                      innerRadius={window.innerWidth <= 768 ? 40 : 60}
-                      label={({ name, value }: { name: string; value: number }) => 
-                        window.innerWidth <= 768 ? `${name}` : `${name}: ${value.toFixed(1)}%`
-                      }
-                      animationBegin={0}
-                      animationDuration={1000}
-                      animationEasing="ease-out"
-                    >
-                      {getUserEmotionData().map((entry, index) => (
-                        <Cell 
-                          key={`cell-${index}`} 
-                          fill={colorSchemes[colorScheme][index % colorSchemes[colorScheme].length]}
-                          stroke={theme === 'dark' ? '#1e1e1e' : '#fff'}
-                          strokeWidth={2}
-                        />
-                      ))}
-                    </Pie>
-                    <RechartsTooltip content={<CustomTooltip theme={theme} />} />
-                    <Legend 
-                      layout={window.innerWidth <= 768 ? "horizontal" : "vertical"}
-                      align={window.innerWidth <= 768 ? "center" : "right"}
-                      verticalAlign={window.innerWidth <= 768 ? "bottom" : "middle"}
-                      formatter={(value: string, entry: any, index: number) => (
-                        <span className="legend-text">
-                          {value} ({getUserEmotionData()[index].value.toFixed(1)}%)
-                        </span>
-                      )}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </motion.div>
-
               <div className="emotion-statistics">
-                <h5>Emotion Statistics</h5>
+                <h5>Behind the Feelings</h5>
                 <div className="emotion-statistics-grid">
                   {getUserEmotionData().map(emotion => (
                     <div key={emotion.name} className="emotion-stat-item">
