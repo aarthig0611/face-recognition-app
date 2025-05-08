@@ -88,6 +88,7 @@
 .nav-links button.web-image-option {
   background-color: var(--primary-color);
   color: white;
+  padding: 0.75rem 1rem;
 }
 
 .nav-links button.web-image-option:hover {
@@ -163,6 +164,40 @@
 
 .bar3-open {
   transform: translateY(-9px) rotate(-45deg);
+}
+
+@media (max-width: 1200px) {
+  .nav-links {
+    gap: 1rem;
+  }
+
+  .nav-links button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 990px) {
+  .navbar-container {
+    padding: 1rem 1rem;
+  }
+
+  .nav-links {
+    gap: 0.75rem;
+  }
+
+  .nav-links button {
+    padding: 0.5rem 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .nav-links button.web-image-option {
+    padding: 0.75rem 0.75rem;
+  }
+
+  .logo {
+    font-size: 1.6rem;
+  }
 }
 
 @media (max-width: 920px) {
