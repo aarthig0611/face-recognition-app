@@ -1,7 +1,9 @@
 /* Main Container */
 .webcam-container {
-  padding: 20px;
+  /* padding: 20px; */
   padding-top: 120px;
+  padding-bottom: 20px;
+  width: 100%;
   max-width: 1440px;
   margin: 0 auto;
   min-height: calc(100vh - 200px);
@@ -43,7 +45,7 @@
   box-shadow: var(--box-shadow);
   display: flex;
   flex-direction: column;
-  max-height: 480px;
+  max-height: 450px;
   border: 1px solid var(--border-color);
 }
 
@@ -391,20 +393,27 @@
 }
 
 /* Responsive Styles */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1016px) {
   .main-content {
     flex-direction: column;
+    align-items: center;
   }
 
   .video-container,
   .unknown-faces-section {
-    width: 100%;
-    max-width: 100%;
+    width: 90%;
+    max-width: 640px;
   }
 
   .video-container {
     height: auto;
     aspect-ratio: 4/3;
+  }
+
+  .video-feed {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .unknown-faces-section {
@@ -418,6 +427,10 @@
 
   .emotion-report-container {
     flex-direction: column;
+    align-items: center;
+    width: 90%;
+    max-width: 640px;
+    margin: 0 auto;
   }
 
   .emotion-timeline {
@@ -426,6 +439,22 @@
 
   .emotion-chart-align {
     flex: 1;
+    width: 100%;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .chart-container {
+    width: 100%;
+    height: 400px;
+    position: relative;
+  }
+
+  .recharts-wrapper {
+    transform: scale(0.9);
+    transform-origin: center;
   }
 
   .emotion-statistics {
@@ -436,31 +465,10 @@
     grid-template-columns: 1fr;
   }
 
-  .recharts-legend-wrapper {
-    padding: 5px 0;
-  }
-
-  .recharts-legend-item {
-    position: relative !important;
-    right: auto !important;
-    top: auto !important;
-    transform: none !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-top: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .recharts-legend-item {
-    margin: 4px 8px !important;
-  }
-
-  .recharts-wrapper {
-    transform: scale(0.9);
-    transform-origin: center;
+  .emotion-report {
+    width: 90%;
+    max-width: 640px;
+    margin: 20px auto;
   }
 
   .analysis-popup {
@@ -501,35 +509,134 @@
     height: 28px;
     font-size: 20px;
   }
+}
+
+@media screen and (max-width: 768px) {
+  .main-content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .video-container,
+  .unknown-faces-section {
+    width: 90%;
+    max-width: 640px;
+  }
+
+  .video-container {
+    height: auto;
+    aspect-ratio: 4/3;
+  }
+
+  .video-feed {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .unknown-faces-section {
+    height: auto;
+    max-height: 300px;
+  }
+
+  .unknown-faces-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+
+  .emotion-report-container {
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .emotion-timeline {
+    flex-direction: column;
+  }
+
+  .emotion-chart-align {
+    flex: 1;
+    width: 100%;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
   .chart-container {
-    min-height: 250px;
-    max-height: 350px;
-    padding-bottom: 80px;
+    width: 100%;
+    height: 400px;
+    position: relative;
   }
 
-  .recharts-legend-item {
-    margin: 2px 4px !important;
+  .recharts-wrapper {
+    transform: scale(0.9);
+    transform-origin: center;
   }
 
-  .legend-text {
-    font-size: 0.8rem;
+  .emotion-statistics {
+    flex: 1;
   }
 
-  .emotion-stat-item {
-    padding: 12px;
-  }
-
-  .emotion-stat-item strong {
-    font-size: 1rem;
+  .emotion-statistics-grid {
+    grid-template-columns: 1fr;
   }
 
   .emotion-report {
-    width: 95%;
+    width: 90%;
+    max-width: 640px;
+    margin: 20px auto;
+  }
+
+  .analysis-popup {
+    padding: 20px;
+    margin: 10px;
+    max-width: 60%;
+  }
+
+  .popup-title {
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+
+  .popup-description {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  .feature-list {
+    margin: 10px 0;
+  }
+
+  .feature-item {
+    font-size: 14px;
+    margin: 5px 0;
+  }
+
+  .view-report-button {
+    padding: 12px 20px;
+    font-size: 14px;
+    max-width: 100%;
+  }
+
+  .popup-close-button {
+    top: 10px;
+    right: 10px;
+    width: 28px;
+    height: 28px;
+    font-size: 20px;
   }
 }
 
 @media screen and (max-width: 480px) {
+  .video-container,
+  .unknown-faces-section,
+  .emotion-report,
+  .emotion-report-container {
+    width: 70%;
+  }
+
   .unknown-faces-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -558,32 +665,11 @@
   }
 
   .recharts-legend-item {
-    margin: 2px 4px !important;
+    margin: 2px 4px;
   }
 
   .legend-text {
     font-size: 0.8rem;
-  }
-
-  .analysis-popup {
-    padding: 15px;
-  }
-
-  .popup-title {
-    font-size: 20px;
-  }
-
-  .popup-description {
-    font-size: 13px;
-  }
-
-  .feature-item {
-    font-size: 13px;
-  }
-
-  .view-report-button {
-    padding: 10px 16px;
-    font-size: 13px;
   }
 
   .emotion-stat-item {
@@ -595,7 +681,7 @@
   }
 
   .emotion-report {
-    width: 100%;
+    width: 95%;
     padding: 15px;
   }
 }

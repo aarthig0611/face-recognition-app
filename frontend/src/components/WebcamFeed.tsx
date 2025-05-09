@@ -395,7 +395,7 @@ const WebcamFeed: React.FC<WebcamFeedProps> = ({ onNavigate }) => {
               onClick={() => setShowPopup(false)}
               className="popup-close-button"
             >
-              ×
+              X
             </button>
 
             <motion.div
@@ -468,15 +468,15 @@ const WebcamFeed: React.FC<WebcamFeedProps> = ({ onNavigate }) => {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5 }}
                   >
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                    <ResponsiveContainer width="100%" height={400}>
+                      <PieChart margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
                         <Pie
                           data={getUserEmotionData()}
                           dataKey="value"
                           nameKey="name"
                           cx="50%"
                           cy="50%"
-                          outerRadius="100%"
+                          outerRadius="80%"
                           animationBegin={0}
                           animationDuration={1000}
                           animationEasing="ease-out"
@@ -495,6 +495,7 @@ const WebcamFeed: React.FC<WebcamFeedProps> = ({ onNavigate }) => {
                           align="center"
                           verticalAlign="bottom"
                           layout="horizontal"
+                          wrapperStyle={{ paddingTop: '20px' }}
                           formatter={(value: string, entry: any, index: number) => (
                             <span className="legend-text">
                               {value} ({getUserEmotionData()[index].value.toFixed(1)}%)
