@@ -15,7 +15,16 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
     onNavigate('home');
     setTimeout(() => {
       const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      if (el) {
+        const navbar = document.querySelector('.navbar') as HTMLElement;
+        const navbarHeight = navbar?.offsetHeight || 0;
+        const elementPosition = el.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
     }, 100);
   };
 
