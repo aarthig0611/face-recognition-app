@@ -37,11 +37,29 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
       onNavigate('home');
       setTimeout(() => {
         const el = document.getElementById(id);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
+        if (el) {
+          const navbar = document.querySelector('.navbar') as HTMLElement;
+          const navbarHeight = navbar?.offsetHeight || 0;
+          const elementPosition = el.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }
       }, 100);
     } else {
       const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      if (el) {
+        const navbar = document.querySelector('.navbar') as HTMLElement;
+        const navbarHeight = navbar?.offsetHeight || 0;
+        const elementPosition = el.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
     }
   };
 
@@ -63,8 +81,8 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
 
         <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
           <button onClick={() => handleScrollTo('how-it-works')}>How it works</button>
-          <button onClick={() => handleScrollTo('about')}>How it's build</button>
-          <button onClick={() => handleScrollTo('use-cases')}>How it's made</button>
+          <button onClick={() => handleScrollTo('about')}>How it's made</button>
+          <button onClick={() => handleScrollTo('use-cases')}>How it's used</button>
           <button onClick={() => handleScrollTo('contact')}>How to reach us</button>
           <button className={'web-image-option'} onClick={handleActionClick}>
             {currentPage === 'webcam' ? 'Analyze Photo' : 'Start Live Detection'}
